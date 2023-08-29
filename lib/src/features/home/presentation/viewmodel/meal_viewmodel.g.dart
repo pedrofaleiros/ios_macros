@@ -53,16 +53,16 @@ mixin _$MealViewmodel on _MealViewmodelBase, Store {
       AsyncAction('_MealViewmodelBase.createMeal', context: context);
 
   @override
-  Future<void> createMeal(String? token) {
-    return _$createMealAsyncAction.run(() => super.createMeal(token));
+  Future<bool> createMeal(String? token, MealDTO meal) {
+    return _$createMealAsyncAction.run(() => super.createMeal(token, meal));
   }
 
   late final _$deleteMealAsyncAction =
       AsyncAction('_MealViewmodelBase.deleteMeal', context: context);
 
   @override
-  Future<void> deleteMeal(String? token) {
-    return _$deleteMealAsyncAction.run(() => super.deleteMeal(token));
+  Future<void> deleteMeal(String? token, String mealId) {
+    return _$deleteMealAsyncAction.run(() => super.deleteMeal(token, mealId));
   }
 
   late final _$deleteItemAsyncAction =
@@ -79,6 +79,20 @@ mixin _$MealViewmodel on _MealViewmodelBase, Store {
   @override
   Future<void> createItem(String? token, ItemDTO item) {
     return _$createItemAsyncAction.run(() => super.createItem(token, item));
+  }
+
+  late final _$_MealViewmodelBaseActionController =
+      ActionController(name: '_MealViewmodelBase', context: context);
+
+  @override
+  void includeMealSorted(MealModel newMeal) {
+    final _$actionInfo = _$_MealViewmodelBaseActionController.startAction(
+        name: '_MealViewmodelBase.includeMealSorted');
+    try {
+      return super.includeMealSorted(newMeal);
+    } finally {
+      _$_MealViewmodelBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

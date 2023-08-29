@@ -80,8 +80,8 @@ class _PageContentState extends State<PageContent> {
                           LetterLabel(
                               text: foodsController.foods[index].name[0]),
                         LongPressDraggable<FoodModel>(
-                          dragAnchorStrategy: pointerDragAnchorStrategy,
-                          // dragAnchorStrategy: childDragAnchorStrategy,
+                          // dragAnchorStrategy: pointerDragAnchorStrategy,
+                          dragAnchorStrategy: childDragAnchorStrategy,
                           data: foodsController.foods[index],
                           feedback:
                               FeedBack(food: foodsController.foods[index]),
