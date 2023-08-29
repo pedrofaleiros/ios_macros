@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/item_list_tile.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_title.dart';
 
@@ -23,13 +24,84 @@ class MealWidget extends StatelessWidget {
         topMargin: 0,
         children: [
           for (var item in meal.items) ItemListTile(item: item),
-          // CupertinoButton(
-          //   padding: const EdgeInsets.all(0),
-          //   onPressed: () {},
-          //   child: AddItemButton(
-          //     mealId: meal.id,
-          //   ),
-          // ),
+          // AddItemButton(),
+          MacrosCount(meal: meal),
+        ],
+      ),
+    );
+  }
+}
+
+class MacrosCount extends StatelessWidget {
+  const MacrosCount({
+    super.key,
+    required this.meal,
+  });
+
+  final MealModel meal;
+
+  Map<String, String> calculateMacros() {
+    double kcal = 0;
+    double carb = 0;
+    double prot = 0;
+    double fat = 0;
+
+    for (var item in meal.items) {
+      kcal += item.food.kcal / 100 * item.amount;
+      carb += item.food.carb / 100 * item.amount;
+      prot += item.food.prot / 100 * item.amount;
+      fat += item.food.fat / 100 * item.amount;
+    }
+
+    return {
+      "kcal": kcal.toStringAsFixed(0),
+      "carb": carb.toStringAsFixed(1),
+      "prot": prot.toStringAsFixed(1),
+      "fat": fat.toStringAsFixed(1),
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var map = calculateMacros();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'C: ${map['carb']}',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: CupertinoColors.systemRed,
+            ),
+          ),
+          Text(
+            'P: ${map['prot']}',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: CupertinoColors.activeBlue,
+            ),
+          ),
+          Text(
+            'G: ${map['fat']}',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: CupertinoColors.activeOrange,
+            ),
+          ),
+          Text(
+            '${map['kcal']} Kcal',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: CupertinoColors.systemMint,
+            ),
+          ),
         ],
       ),
     );
@@ -39,16 +111,15 @@ class MealWidget extends StatelessWidget {
 class AddItemButton extends StatelessWidget {
   const AddItemButton({
     super.key,
-    required this.mealId,
   });
-
-  final String mealId;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-      onPressed: () async {},
       padding: const EdgeInsets.all(0),
+      onPressed: () {
+        Navigator.pushNamed(context, DraggableFoodsPage.routeName);
+      },
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
