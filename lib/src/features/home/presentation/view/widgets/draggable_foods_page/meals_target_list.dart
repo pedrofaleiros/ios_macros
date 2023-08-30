@@ -7,9 +7,11 @@ class MealsTargetList extends StatelessWidget {
   const MealsTargetList({
     super.key,
     required this.scrollController,
+    // required this.opacity,
   });
 
   final ScrollController scrollController;
+  // final double opacity;
 
   @override
   Widget build(BuildContext context) {

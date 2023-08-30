@@ -35,12 +35,13 @@ class _MealTargetState extends State<MealTarget> {
     }
 
     if (mounted) {
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
     }
 
     if (mounted) {
       setState(() {
         added = false;
+        // widget.action(false);
       });
     }
   }
