@@ -16,7 +16,6 @@ class CreateMealRepository implements HomeRepositoryI<MealModel> {
     required String token,
   }) async {
     final dio = DioClient.getDioWithToken(token);
-
     final response = await dio.post(
       '${DioClient.baseUrl}/meal',
       data: body,
@@ -24,10 +23,9 @@ class CreateMealRepository implements HomeRepositoryI<MealModel> {
 
     if (response.statusCode == 200) {
       MealModel newMeal = converter.fromMap(response.data);
-
       return newMeal;
-    } else {
-      throw Exception('Erro desconhecido createMeal');
     }
+
+    throw Exception('Erro desconhecido createMeal');
   }
 }

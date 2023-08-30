@@ -4,7 +4,7 @@ part 'meal_model.g.dart';
 
 // ignore: library_private_types_in_public_api
 class MealModel = _MealModelBase with _$MealModel;
-
+ 
 abstract class _MealModelBase with Store {
   @observable
   String id;
@@ -41,7 +41,6 @@ abstract class _MealModelBase with Store {
 
   @action
   void updateItem(String id, double amount) {
-    // items.add(item);
     for (var element in items) {
       if (element.id == id) {
         element = element.copyWith(

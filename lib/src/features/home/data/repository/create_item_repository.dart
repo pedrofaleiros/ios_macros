@@ -10,18 +10,14 @@ class CreateItemRepository implements HomeRepositoryI<ItemModel> {
     required String token,
   }) async {
     final dio = DioClient.getDioWithToken(token);
-
-    final response = await dio.post(
-      url,
-      data: body,
-    );
+    final response = await dio.post(url, data: body);
 
     if (response.statusCode == 200) {
       ItemModel newItem = ItemModel.fromMap(response.data);
       return newItem;
-    } else {
-      throw Exception('Erro desconhecido createItem');
     }
+
+    throw Exception('Erro desconhecido createItem');
   }
 
   @override

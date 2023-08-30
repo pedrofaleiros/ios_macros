@@ -7,7 +7,7 @@ import 'package:mobx/mobx.dart';
 part 'meal_viewmodel.g.dart';
 
 class MealViewmodel = _MealViewmodelBase with _$MealViewmodel;
-
+ 
 abstract class _MealViewmodelBase with Store {
   final MealUsecase _usecase = MealUsecase();
 
@@ -20,8 +20,6 @@ abstract class _MealViewmodelBase with Store {
   @action
   Future<void> getMeals(String? token) async {
     isLoading = true;
-
-    // await Future.delayed(const Duration(milliseconds: 300));
 
     try {
       final response = await _usecase.getMeals(token);
@@ -40,18 +38,13 @@ abstract class _MealViewmodelBase with Store {
 
   @action
   Future<bool> createMeal(String? token, MealDTO meal) async {
-    isLoading = true;
-
     try {
       final newMeal = await _usecase.createMeal(token, meal);
 
       includeMealSorted(newMeal);
-      isLoading = false;
       return true;
     } catch (e) {
       print(e.toString());
-    } finally {
-      isLoading = false;
     }
     return false;
   }
@@ -61,7 +54,7 @@ abstract class _MealViewmodelBase with Store {
     isLoading = true;
 
     try {
-      final newMeal = await _usecase.deleteMeal(token, mealId);
+      await _usecase.deleteMeal(token, mealId);
 
       meals.removeWhere((element) => element.id == mealId);
     } catch (e) {
@@ -73,8 +66,6 @@ abstract class _MealViewmodelBase with Store {
 
   @action
   Future<void> deleteItem(String? token, String itemId) async {
-    // isLoading = true;
-
     try {
       await _usecase.deleteItem(token, itemId);
 
@@ -87,16 +78,12 @@ abstract class _MealViewmodelBase with Store {
       }
     } on DioException catch (e) {
       print(e.response!.data);
-    } finally {
-      // isLoading = false;
     }
   }
 
   @action
   Future<void> createItem(String? token, ItemDTO item) async {
     isLoading = true;
-
-    // await Future.delayed(const Duration(milliseconds: 300));
 
     try {
       final response = await _usecase.createItem(token, item);

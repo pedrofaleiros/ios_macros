@@ -13,18 +13,15 @@ abstract class _AuthViewmodelBase with Store {
 
   @observable
   UserModel? sessionUser;
+  @observable
+  bool isLoading = false;
 
   @computed
   bool get isAuth => sessionUser != null;
 
-  @observable
-  bool isLoading = false;
-
   @action
   Future<void> login(UserDTO user) async {
     isLoading = true;
-
-    await Future.delayed(const Duration(milliseconds: 900));
 
     try {
       final response = await _usecase.login(user);
@@ -33,7 +30,7 @@ abstract class _AuthViewmodelBase with Store {
     } on DioException catch (e) {
       if (e.response != null) {
         print(e.response);
-      }else{
+      } else {
         print(e.toString());
       }
     } catch (e) {
@@ -59,8 +56,6 @@ abstract class _AuthViewmodelBase with Store {
   @action
   Future<void> autologin() async {
     isLoading = true;
-
-    await Future.delayed(const Duration(milliseconds: 300));
 
     try {
       final response = await _usecase.autoLogin();

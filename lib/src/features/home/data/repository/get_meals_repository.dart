@@ -16,17 +16,14 @@ class GetMealsRepository implements HomeRepositoryI<List<MealModel>> {
     required String token,
   }) async {
     final dio = DioClient.getDioWithToken(token);
-
     final response = await dio.get(url);
 
     if (response.statusCode == 200) {
       final data = response.data as List<dynamic>;
-
       List<MealModel> list = converter.getList(data);
-
       return list;
-    } else {
-      throw Exception('Erro desconhecido getMeals');
     }
+
+    throw Exception('Erro desconhecido getMeals');
   }
 }

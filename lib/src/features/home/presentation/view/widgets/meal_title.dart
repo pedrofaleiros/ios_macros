@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
@@ -54,10 +53,14 @@ class MealTitle extends StatelessWidget {
   Future<void> deleteMeal(BuildContext context) async {
     await _showDialog(context).then((value) async {
       if (value == true) {
-        final token = context.read<AuthViewmodel>().sessionUser!.token;
-        await context.read<MealViewmodel>().deleteMeal(token, meal.id).then(
-              (value) => Navigator.pop(context),
-            );
+        final auth = context.read<AuthViewmodel>();
+        if (auth.isAuth) {
+          final token = auth.sessionUser!.token;
+          await context
+              .read<MealViewmodel>()
+              .deleteMeal(token, meal.id)
+              .then((value) => Navigator.pop(context));
+        }
       }
     });
   }

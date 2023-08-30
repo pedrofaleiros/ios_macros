@@ -9,15 +9,12 @@ class DeleteItemRepository implements HomeRepositoryI<void> {
     required String token,
   }) async {
     final dio = DioClient.getDioWithToken(token);
-
     final response = await dio.delete(
       url,
       queryParameters: queryParams,
     );
 
-    if (response.statusCode == 200) {
-      return;
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Erro desconhecido deleteItem');
     }
   }

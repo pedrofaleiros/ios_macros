@@ -4,7 +4,7 @@ import 'package:mobx/mobx.dart';
 part 'food_viewmodel.g.dart';
 
 class FoodViewmodel = _FoodViewmodelBase with _$FoodViewmodel;
-
+ 
 abstract class _FoodViewmodelBase with Store {
   final FoodUsecase _usecase = FoodUsecase();
 
@@ -17,8 +17,6 @@ abstract class _FoodViewmodelBase with Store {
   @action
   Future<void> getFoods(String? token) async {
     isLoading = true;
-
-    // await Future.delayed(const Duration(milliseconds: 300));
 
     try {
       final response = await _usecase.get(token);
@@ -38,8 +36,6 @@ abstract class _FoodViewmodelBase with Store {
   @action
   Future<void> getFoodsWithName(String? token, String? name) async {
     isLoading = true;
-
-    // await Future.delayed(const Duration(milliseconds: 300));
 
     try {
       final response = await _usecase.getWithName(token, name);

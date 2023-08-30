@@ -14,7 +14,13 @@ class LoadingPage extends StatelessWidget {
           children: [
             const CupertinoActivityIndicator(),
             const SizedBox(height: 10),
-            Text(message ?? ''),
+            Text(
+              message ?? '',
+              style: const TextStyle(
+                fontSize: 14,
+                color: CupertinoColors.systemGrey2,
+              ),
+            ),
           ],
         ),
       ),
