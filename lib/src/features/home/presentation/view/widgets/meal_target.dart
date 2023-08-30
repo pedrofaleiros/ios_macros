@@ -11,11 +11,9 @@ class MealTarget extends StatefulWidget {
   const MealTarget({
     super.key,
     required this.meal,
-    required this.left,
   });
 
   final MealModel meal;
-  final double left;
 
   @override
   State<MealTarget> createState() => _MealTargetState();
@@ -23,68 +21,9 @@ class MealTarget extends StatefulWidget {
 
 class _MealTargetState extends State<MealTarget> {
   bool added = false;
+  bool isLoading = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return DragTarget<FoodModel>(
-      onAccept: (data) async {
-        await showPopup(context).then(
-          (response) async {
-            try {
-
-              if(response == null) return;
-
-              if (double.tryParse(response) != null) {
-                final amount = double.parse(response);
-
-                final token = context.read<AuthViewmodel>().sessionUser!.token;
-
-                await context
-                    .read<MealViewmodel>()
-                    .createItem(
-                      token,
-                      ItemDTO(
-                        mealId: widget.meal.id,
-                        foodId: data.id,
-                        amount: amount,
-                      ),
-                    )
-                    .then(showAdded);
-              }
-            } catch (e) {
-              print(e.toString());
-            }
-          },
-        );
-      },
-      builder: (context, foods, list) {
-        return Padding(
-          // padding: foods.isNotEmpty
-          //     ? const EdgeInsets.symmetric(horizontal: 4, vertical: 12)
-          //     : EdgeInsets.only(
-          //         left: widget.left, top: 16, right: 8, bottom: 16),
-          padding:
-              EdgeInsets.only(left: widget.left, top: 16, right: 8, bottom: 16),
-          child: Container(
-            decoration: BoxDecoration(
-              color: foods.isNotEmpty
-                  ? CupertinoTheme.brightnessOf(context) == Brightness.dark
-                      ? Color(0xff2b2b2b)
-                      : CupertinoColors.systemGrey5
-                  : CupertinoTheme.brightnessOf(context) == Brightness.dark
-                      ? CupertinoColors.systemFill
-                      : CupertinoColors.systemGroupedBackground,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            width: 100.0,
-            child: _content,
-          ),
-        );
-      },
-    );
-  }
-
-  FutureOr<void> showAdded(_) async {
+  Future<void> showAdded() async {
     if (mounted) {
       setState(() {
         added = true;
@@ -102,6 +41,38 @@ class _MealTargetState extends State<MealTarget> {
     }
   }
 
+  double? validAmount(dynamic response) {
+    try {
+      if (response == null) return null;
+
+      if (double.tryParse(response) == null) return null;
+
+      return double.parse(response);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> createItem({
+    required String foodId,
+    required double amount,
+    required String token,
+    required MealViewmodel mealController,
+  }) async {
+    final token = context.read<AuthViewmodel>().sessionUser!.token;
+
+    setState(() => isLoading = true);
+    await mealController.createItem(
+      token,
+      ItemDTO(
+        mealId: widget.meal.id,
+        foodId: foodId,
+        amount: amount,
+      ),
+    );
+    setState(() => isLoading = false);
+  }
+
   Future<dynamic> showPopup(BuildContext context) {
     return showCupertinoModalPopup(
       context: context,
@@ -109,7 +80,74 @@ class _MealTargetState extends State<MealTarget> {
         TextEditingController textController = TextEditingController();
         FocusNode focus = FocusNode();
 
-        return AmountAlertDialog(focus: focus, textController: textController);
+        return AmountAlertDialog(
+          focus: focus,
+          textController: textController,
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<FoodModel>(
+      onAccept: (food) async {
+        final token = context.read<AuthViewmodel>().sessionUser!.token;
+        final mealController = context.read<MealViewmodel>();
+
+        final response = await showPopup(context);
+
+        final amount = validAmount(response);
+
+        if (amount == null) return;
+
+        await createItem(
+          mealController: mealController,
+          token: token,
+          foodId: food.id,
+          amount: amount,
+        );
+        await showAdded();
+      },
+      builder: (context, foods, list) {
+        return Container(
+          width: 125.0,
+          // decoration: BoxDecoration(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: [
+          //       CupertinoColors.black.withOpacity(0.2),
+          //       CupertinoColors.black.withOpacity(0.4),
+          //       CupertinoColors.black.withOpacity(0.6),
+          //       CupertinoColors.black.withOpacity(0.8),
+          //       CupertinoColors.black.withOpacity(1),
+          //     ],
+          //   ),
+          // ),
+          color: CupertinoColors.black.withOpacity(0),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 16,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: foods.isNotEmpty
+                  ? CupertinoTheme.brightnessOf(context) == Brightness.dark
+                      ? Color(0xff2c2c2c)
+                      : CupertinoColors.white
+                  : CupertinoTheme.brightnessOf(context) == Brightness.dark
+                      ? CupertinoColors.label
+                      : CupertinoColors.systemGroupedBackground,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: CupertinoColors.opaqueSeparator,
+                width: 0,
+              ),
+            ),
+            child: _content,
+          ),
+        );
       },
     );
   }
@@ -151,7 +189,13 @@ class _MealTargetState extends State<MealTarget> {
             ),
           ),
         ),
-        if (added) const AddedText(),
+        if (isLoading)
+          const Padding(
+            padding: EdgeInsets.all(4.0),
+            child: CupertinoActivityIndicator(),
+          )
+        else if (added)
+          const AddedText(),
       ],
     );
   }
@@ -169,7 +213,7 @@ class AmountAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       FocusScope.of(context).requestFocus(focus);
     });
 
@@ -186,7 +230,7 @@ class AmountAlertDialog extends StatelessWidget {
       ),
       actions: [
         CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context, ''),
+          onPressed: () => Navigator.pop(context, null),
           isDestructiveAction: true,
           child: const Text('Cancelar'),
         ),

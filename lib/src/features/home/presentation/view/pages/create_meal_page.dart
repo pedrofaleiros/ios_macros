@@ -129,10 +129,8 @@ class _CreateMealPageState extends State<CreateMealPage> {
                 width: double.infinity,
                 child: CupertinoButton.filled(
                   child: isLoading
-                      ? LoadingPage()
-                      : Text(
-                          'Adicionar',
-                        ),
+                      ? const CupertinoActivityIndicator()
+                      : const Text('Adicionar'),
                   onPressed: () async {
                     setState(() {
                       isLoading = true;

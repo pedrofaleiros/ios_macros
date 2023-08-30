@@ -73,7 +73,7 @@ abstract class _MealViewmodelBase with Store {
 
   @action
   Future<void> deleteItem(String? token, String itemId) async {
-    isLoading = true;
+    // isLoading = true;
 
     try {
       await _usecase.deleteItem(token, itemId);
@@ -88,7 +88,7 @@ abstract class _MealViewmodelBase with Store {
     } on DioException catch (e) {
       print(e.response!.data);
     } finally {
-      isLoading = false;
+      // isLoading = false;
     }
   }
 

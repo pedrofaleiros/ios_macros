@@ -62,21 +62,24 @@ class MacrosText extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width * 0.1,
       alignment: alignment,
-      child: Tooltip(
-        message: name,
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        child: Text(
-          amount.toStringAsFixed(1),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: color,
-          ),
+      child: Text(
+        amount.toStringAsFixed(1),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+          color: color,
         ),
       ),
     );
   }
 }
+
+/* 
+
+Tooltip(
+        message: name,
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+ */

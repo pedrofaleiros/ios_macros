@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
-import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
-import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/feedback.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/foods_list_tile.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/letter_label.dart';
@@ -25,7 +23,7 @@ class DraggableFoodsPage extends StatelessWidget {
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text('Arraste Alimentos'),
+        middle: Text('Adicione alimentos'),
       ),
       child: SafeArea(
         child: FutureBuilder(
@@ -54,6 +52,7 @@ class PageContent extends StatefulWidget {
 
 class _PageContentState extends State<PageContent> {
   TextEditingController textController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,57 +61,95 @@ class _PageContentState extends State<PageContent> {
     final mealsController = context.read<MealViewmodel>();
 
     return Observer(
-      builder: (_) => Column(
+      builder: (_) => Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          _searchFoodTextField(foodsController, token),
-          Expanded(
-            child: foodsController.isLoading
-                ? const LoadingPage()
-                : ListView.builder(
-                    itemCount: foodsController.foods.length,
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        if (index == 0 ||
-                            foodsController.foods[index].name[0]
-                                    .toUpperCase() !=
-                                foodsController.foods[index - 1].name[0]
-                                    .toUpperCase())
-                          LetterLabel(
-                              text: foodsController.foods[index].name[0]),
-                        LongPressDraggable<FoodModel>(
-                          // dragAnchorStrategy: pointerDragAnchorStrategy,
-                          dragAnchorStrategy: childDragAnchorStrategy,
-                          data: foodsController.foods[index],
-                          feedback:
-                              FeedBack(food: foodsController.foods[index]),
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            child: FoodListTile(
-                                food: foodsController.foods[index]),
-                          ),
+          Column(
+            children: [
+              _searchFoodTextField(foodsController, token),
+              Expanded(
+                child: foodsController.isLoading
+                    ? const LoadingPage()
+                    : ListView.builder(
+                        itemCount: foodsController.foods.length,
+                        itemBuilder: (context, index) => Column(
+                          children: [
+                            if (index == 0 ||
+                                foodsController.foods[index].name[0]
+                                        .toUpperCase() !=
+                                    foodsController.foods[index - 1].name[0]
+                                        .toUpperCase())
+                              LetterLabel(
+                                  text: foodsController.foods[index].name[0]),
+                            LongPressDraggable<FoodModel>(
+                              onDragUpdate: (details) {
+                                double scrollThreshold = 100.0;
+                                double speed = 5;
+
+                                // Verifica se o arrasto está dentro da área onde a rolagem deveria ocorrer
+                                if (details.globalPosition.dy <
+                                    MediaQuery.of(context).size.height -
+                                        (MediaQuery.of(context).size.height *
+                                            0.25)) return;
+
+                                // Rola para a direita se não estivermos já no final
+                                if (details.globalPosition.dx >
+                                    (MediaQuery.of(context).size.width -
+                                        scrollThreshold)) {
+                                  if (scrollController.position.pixels <
+                                      scrollController
+                                          .position.maxScrollExtent) {
+                                    scrollController.jumpTo(
+                                        scrollController.position.pixels +
+                                            speed);
+                                  }
+                                }
+
+                                // Rola para a esquerda se não estivermos já no começo
+                                if (details.globalPosition.dx <
+                                    scrollThreshold) {
+                                  if (scrollController.position.pixels >
+                                      scrollController
+                                          .position.minScrollExtent) {
+                                    scrollController.jumpTo(
+                                        scrollController.position.pixels -
+                                            speed);
+                                  }
+                                }
+                              },
+                              // dragAnchorStrategy: pointerDragAnchorStrategy,
+                              dragAnchorStrategy: childDragAnchorStrategy,
+                              data: foodsController.foods[index],
+                              feedback:
+                                  FeedBack(food: foodsController.foods[index]),
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                child: FoodListTile(
+                                    food: foodsController.foods[index]),
+                              ),
+                            ),
+                            if(index == foodsController.foods.length - 1) SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              width: double.infinity,
+                              // color: CupertinoColors.activeGreen,
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+              ),
+            ],
           ),
-          // Container(
-          //   height: 1,
-          //   width: double.infinity,
-          //   color: CupertinoColors.activeBlue,
-          // ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
+            height: MediaQuery.of(context).size.height * 0.2,
             child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
               itemCount: mealsController.meals.length,
               itemBuilder: (context, index) {
-                return MealTarget(
-                  meal: mealsController.meals[index],
-                  left: index == 0 ? 16 : 8,
-                );
+                return MealTarget(meal: mealsController.meals[index]);
               },
             ),
-          )
+          ),
         ],
       ),
     );
@@ -123,7 +160,7 @@ class _PageContentState extends State<PageContent> {
       padding: const EdgeInsets.all(8.0),
       child: CupertinoSearchTextField(
         controller: textController,
-        onChanged: (value) async => await foodsController.getFoodsWithName(
+        onSubmitted: (value) async => await foodsController.getFoodsWithName(
           token,
           textController.text,
         ),
@@ -131,3 +168,9 @@ class _PageContentState extends State<PageContent> {
     );
   }
 }
+
+
+/* 
+
+
+ */

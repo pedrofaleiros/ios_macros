@@ -31,7 +31,13 @@ abstract class _AuthViewmodelBase with Store {
 
       sessionUser = response;
     } on DioException catch (e) {
-      print(e.response!);
+      if (e.response != null) {
+        print(e.response);
+      }else{
+        print(e.toString());
+      }
+    } catch (e) {
+      print(e.toString());
     } finally {
       isLoading = false;
     }
@@ -61,7 +67,7 @@ abstract class _AuthViewmodelBase with Store {
 
       sessionUser = response;
     } on SPException catch (e) {
-      // print(e.toString());
+      print('erro no shared preferences $e');
     } finally {
       isLoading = false;
     }

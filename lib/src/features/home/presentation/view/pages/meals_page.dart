@@ -6,6 +6,7 @@ import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_f
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_widget.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
+import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class MealsPage extends StatelessWidget {
@@ -19,6 +20,11 @@ class MealsPage extends StatelessWidget {
         child: Observer(
           builder: (context) {
             final mealsViewmodel = context.read<MealViewmodel>();
+
+            if(mealsViewmodel.isLoading){
+              return LoadingPage();
+            }
+
             return ListView.builder(
               itemCount: mealsViewmodel.meals.length,
               itemBuilder: (BuildContext context, int index) {
