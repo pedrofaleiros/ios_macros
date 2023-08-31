@@ -21,6 +21,8 @@ abstract class _MealViewmodelBase with Store {
   Future<void> getMeals(String? token) async {
     isLoading = true;
 
+    // await Future.delayed(const Duration(milliseconds: 300));
+
     try {
       final response = await _usecase.getMeals(token);
 

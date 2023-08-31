@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
-import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_widget.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/widgets/loading_page.dart';
@@ -14,22 +13,41 @@ class MealsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.read<AuthViewmodel>();
+    final mealsViewmodel = context.read<MealViewmodel>();
+
     return CupertinoPageScaffold(
       navigationBar: _navBar(context),
       child: SafeArea(
         child: Observer(
           builder: (context) {
-            final mealsViewmodel = context.read<MealViewmodel>();
-
-            if(mealsViewmodel.isLoading){
-              return LoadingPage();
+            if (mealsViewmodel.isLoading) {
+              return const LoadingPage();
             }
 
-            return ListView.builder(
-              itemCount: mealsViewmodel.meals.length,
-              itemBuilder: (BuildContext context, int index) {
-                return MealWidget(meal: mealsViewmodel.meals[index]);
-              },
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(milliseconds: 300));
+                    if (auth.isAuth) {
+                      final token = auth.sessionUser!.token;
+                      await mealsViewmodel.getMeals(token);
+                    }
+                  },
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => MealWidget(
+                      meal: mealsViewmodel.meals[index],
+                    ),
+                    childCount: mealsViewmodel.meals.length,
+                  ),
+                ),
+              ],
             );
           },
         ),

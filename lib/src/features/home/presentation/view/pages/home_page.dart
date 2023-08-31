@@ -78,6 +78,18 @@ class TestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return CupertinoPageScaffold(
+      child: SafeArea(
+        child: Center(
+          child: CupertinoButton(
+            onPressed: () async {
+              context.read<MealViewmodel>().meals.clear();
+              await context.read<AuthViewmodel>().logout();
+            },
+            child: const Text('Logout'),
+          ),
+        ),
+      ),
+    );
   }
 }
