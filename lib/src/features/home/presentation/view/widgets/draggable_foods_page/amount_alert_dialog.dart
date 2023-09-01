@@ -5,10 +5,12 @@ class AmountAlertDialog extends StatelessWidget {
     super.key,
     required this.focus,
     required this.textController,
+    required this.dfAmount,
   });
 
   final FocusNode focus;
   final TextEditingController textController;
+  final double dfAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,14 @@ class AmountAlertDialog extends StatelessWidget {
         child: Text('Selecione a quantidade'),
       ),
       content: CupertinoTextField(
+        placeholder: '$dfAmount',
+        clearButtonMode: OverlayVisibilityMode.editing,
         focusNode: focus,
         controller: textController,
         keyboardType: TextInputType.number,
-        onEditingComplete: () => Navigator.pop(context, textController.text),
+        onEditingComplete: () => textController.text.isEmpty
+            ? Navigator.pop(context, dfAmount.toString())
+            : Navigator.pop(context, textController.text),
       ),
       actions: [
         CupertinoDialogAction(
@@ -34,7 +40,9 @@ class AmountAlertDialog extends StatelessWidget {
           child: const Text('Cancelar'),
         ),
         CupertinoDialogAction(
-          onPressed: () => Navigator.pop(context, textController.text),
+          onPressed: () => textController.text.isEmpty
+              ? Navigator.pop(context, dfAmount.toString())
+              : Navigator.pop(context, textController.text),
           isDefaultAction: true,
           child: const Text('Confirmar'),
         ),

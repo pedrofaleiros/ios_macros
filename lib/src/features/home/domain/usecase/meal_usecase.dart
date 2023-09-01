@@ -5,6 +5,7 @@ import 'package:ios_macros/src/features/home/data/repository/create_meal_reposit
 import 'package:ios_macros/src/features/home/data/repository/delete_item_repository.dart';
 import 'package:ios_macros/src/features/home/data/repository/delete_meal_repository.dart';
 import 'package:ios_macros/src/features/home/data/repository/get_meals_repository.dart';
+import 'package:ios_macros/src/features/home/domain/model/exceptions/invalid_token_exception.dart';
 import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 
@@ -89,11 +90,3 @@ class MealUsecase {
   }
 }
 
-class InvalidTokenException implements Exception {
-  final String? message;
-
-  InvalidTokenException({this.message});
-
-  @override
-  String toString() => message ?? 'token null';
-}

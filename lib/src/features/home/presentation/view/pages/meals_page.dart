@@ -19,93 +19,57 @@ class MealsPage extends StatelessWidget {
     return CupertinoPageScaffold(
       navigationBar: _navBar(context),
       child: SafeArea(
-        child: Observer(
-          builder: (context) {
-            if (mealsViewmodel.isLoading) {
-              return const LoadingPage();
-            }
-
-            return CustomScrollView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              slivers: [
-                CupertinoSliverRefreshControl(
-                  onRefresh: () async {
-                    await Future.delayed(const Duration(milliseconds: 300));
-                    if (auth.isAuth) {
-                      final token = auth.sessionUser!.token;
-                      await mealsViewmodel.getMeals(token);
-                    }
-                  },
-                ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => MealWidget(
-                      meal: mealsViewmodel.meals[index],
-                    ),
-                    childCount: mealsViewmodel.meals.length,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: [
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
+                await Future.delayed(const Duration(milliseconds: 300));
+                if (auth.isAuth) {
+                  final token = auth.sessionUser!.token;
+                  await mealsViewmodel.getMeals(token);
+                }
+              },
+            ),
+            Observer(
+              builder: (_) => SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => MealWidget(
+                    meal: mealsViewmodel.meals[index],
                   ),
+                  childCount: mealsViewmodel.meals.length,
                 ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   CupertinoNavigationBar _navBar(BuildContext context) {
-    final auth = context.read<AuthViewmodel>();
+    // final auth = context.read<AuthViewmodel>();
+
     return CupertinoNavigationBar(
       padding: const EdgeInsetsDirectional.all(0),
-      leading: CupertinoButton(
-        alignment: Alignment.center,
-        onPressed: () {
-          Navigator.pushNamed(context, DraggableFoodsPage.routeName);
-        },
-        child: const Icon(CupertinoIcons.today_fill),
-      ),
-      middle: Text(auth.sessionUser!.name),
       trailing: CupertinoButton(
-        padding: const EdgeInsets.all(0),
-        alignment: Alignment.center,
-        onPressed: () async {
-          // await auth.logout();
-          Navigator.pushNamed(context, CreateMealPage.routeName);
-        },
+        padding: _padding,
+        onPressed: () =>
+            Navigator.pushNamed(context, DraggableFoodsPage.routeName),
+        child: const Icon(CupertinoIcons.today),
+      ),
+      middle: const Text('Refeições'),
+      leading: CupertinoButton(
+        padding: _padding,
+        onPressed: () async =>
+            Navigator.pushNamed(context, CreateMealPage.routeName),
         child: const Icon(CupertinoIcons.add),
         // child: const Text('Sair'),
       ),
     );
   }
-}
 
-// CupertinoSegmentedControl<int>(
-//         groupValue: index,
-//         children: const <int, Widget>{
-//           0: Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 4),
-//             child: Text(
-//               'Refeiçoes',
-//               style: TextStyle(
-//                 fontSize: 14,
-//               ),
-//             ),
-//           ),
-//           1: Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 4),
-//             child: Text(
-//               'Alimentos',
-//               style: TextStyle(
-//                 fontSize: 14,
-//               ),
-//             ),
-//           ),
-//         },
-//         onValueChanged: (value) {
-//           setState(() {
-//             index = value;
-//           });
-//         },
-//       )
+  EdgeInsets get _padding => const EdgeInsets.all(0);
+}

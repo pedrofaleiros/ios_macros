@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
+import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/copy_cut_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -72,16 +75,31 @@ class MealTitle extends StatelessWidget {
         title: Text(meal.name),
         actions: [
           CupertinoActionSheetAction(
-            onPressed: () {},
-            child: const Text('Editar'),
-          ),
-          CupertinoActionSheetAction(
             onPressed: () async => await deleteMeal(context),
+            isDestructiveAction: true,
             child: const Text('Apagar'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {},
-            child: const Text('Copiar alimentos'),
+            onPressed: () {
+              context.read<CopyPasteViewmodel>().copy(meal);
+              Navigator.pop(context);
+            },
+            child: const Text('Copiar'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              final list = context.read<CopyPasteViewmodel>().paste();
+              final mealsController = context.read<MealViewmodel>();
+              final auth = context.read<AuthViewmodel>();
+
+              if (auth.isAuth == false) return;
+
+              await addItems(list, mealsController, auth.sessionUser!.token)
+                  .then(
+                (value) => Navigator.pop(context),
+              );
+            },
+            child: const Text('Colar'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(
@@ -91,6 +109,23 @@ class MealTitle extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> addItems(
+    List<ItemModel> list,
+    MealViewmodel mealsController,
+    String token,
+  ) async {
+    for (var item in list) {
+      await mealsController.createItem(
+        token,
+        ItemDTO(
+          mealId: meal.id,
+          foodId: item.food.id,
+          amount: item.amount,
+        ),
+      );
+    }
   }
 }
 

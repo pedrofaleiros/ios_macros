@@ -9,6 +9,7 @@ import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_name.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_time.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
+import 'package:ios_macros/src/utils/last_amount_food.dart';
 import 'package:provider/provider.dart';
 
 class MealTarget extends StatefulWidget {
@@ -65,18 +66,24 @@ class _MealTargetState extends State<MealTarget> {
     required MealViewmodel mealController,
   }) async {
     setState(() => isLoading = true);
-    await mealController.createItem(
+    await mealController
+        .createItem(
       token,
       ItemDTO(
         mealId: widget.meal.id,
         foodId: foodId,
         amount: amount,
       ),
+    )
+        .then(
+      (value) {
+        LastAmoutFood().setLastAmount(foodId, amount);
+      },
     );
     setState(() => isLoading = false);
   }
 
-  Future<dynamic> showAmountPopup(BuildContext context) {
+  Future<dynamic> showAmountPopup(BuildContext context, double dfAmount) {
     return showCupertinoModalPopup(
       context: context,
       builder: (_) {
@@ -86,6 +93,7 @@ class _MealTargetState extends State<MealTarget> {
         return AmountAlertDialog(
           focus: focus,
           textController: textController,
+          dfAmount: dfAmount,
         );
       },
     );
@@ -100,19 +108,21 @@ class _MealTargetState extends State<MealTarget> {
         final token = auth.sessionUser!.token;
         final mealController = context.read<MealViewmodel>();
 
-        final response = await showAmountPopup(context);
+        await LastAmoutFood().getLastAmount(food.id).then((dfAmount) async {
+          final response = await showAmountPopup(context, dfAmount);
 
-        final amount = validAmount(response);
+          final amount = validAmount(response);
 
-        if (amount != null) {
-          await createItem(
-            mealController: mealController,
-            token: token,
-            foodId: food.id,
-            amount: amount,
-          );
-          await showAdded();
-        }
+          if (amount != null) {
+            await createItem(
+              mealController: mealController,
+              token: token,
+              foodId: food.id,
+              amount: amount,
+            );
+            await showAdded();
+          }
+        });
       },
       builder: (context, foods, list) {
         return Container(

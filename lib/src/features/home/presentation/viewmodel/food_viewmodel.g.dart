@@ -58,6 +58,22 @@ mixin _$FoodViewmodel on _FoodViewmodelBase, Store {
         .run(() => super.getFoodsWithName(token, name));
   }
 
+  late final _$createFoodAsyncAction =
+      AsyncAction('_FoodViewmodelBase.createFood', context: context);
+
+  @override
+  Future<bool> createFood(String? token, FoodDTO food) {
+    return _$createFoodAsyncAction.run(() => super.createFood(token, food));
+  }
+
+  late final _$deleteFoodAsyncAction =
+      AsyncAction('_FoodViewmodelBase.deleteFood', context: context);
+
+  @override
+  Future<void> deleteFood(String? token, String foodId) {
+    return _$deleteFoodAsyncAction.run(() => super.deleteFood(token, foodId));
+  }
+
   @override
   String toString() {
     return '''

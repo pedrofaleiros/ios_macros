@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/controller/login_controller.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/pages/login_page.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/create_food_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/home_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/profile_page.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/copy_cut_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/splash_page.dart';
@@ -30,6 +34,9 @@ class AppWidget extends StatelessWidget {
         Provider<FoodViewmodel>(
           create: (context) => FoodViewmodel(),
         ),
+        Provider<CopyPasteViewmodel>(
+          create: (context) => CopyPasteViewmodel(),
+        ),
       ],
       child: CupertinoApp(
         debugShowCheckedModeBanner: false,
@@ -41,6 +48,9 @@ class AppWidget extends StatelessWidget {
           FoodsPage.routeName: (_) => const FoodsPage(),
           DraggableFoodsPage.routeName: (_) => const DraggableFoodsPage(),
           CreateMealPage.routeName: (_) => const CreateMealPage(),
+          ProfilePage.routeName: (_) => const ProfilePage(),
+          EditFoodsPage.routeName: (_) => const EditFoodsPage(),
+          CreateFoodPage.routeName: (_) => const CreateFoodPage(),
         },
       ),
     );

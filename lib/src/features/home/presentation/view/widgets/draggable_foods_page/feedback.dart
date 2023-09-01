@@ -20,13 +20,19 @@ class FeedBack extends StatelessWidget {
           offset: Offset(-height * 1.5, -height * 1.25),
           child: Container(
             decoration: BoxDecoration(
-              color: CupertinoColors.systemGroupedBackground,
-              borderRadius: BorderRadius.circular(8),
+              color: CupertinoTheme.brightnessOf(context) == Brightness.dark
+                  ? CupertinoColors.systemGroupedBackground
+                  : CupertinoColors.systemGrey3,
+              borderRadius: BorderRadius.circular(4),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Text(
               food.name,
-              style: const TextStyle(color: CupertinoColors.black),
+              style: TextStyle(
+                color: CupertinoTheme.brightnessOf(context) == Brightness.dark
+                    ? CupertinoColors.black
+                    : CupertinoColors.black,
+              ),
             ),
           ),
         ),
@@ -39,29 +45,25 @@ class FeedBack extends StatelessWidget {
               // color: CupertinoColors.activeBlue,
               borderRadius: BorderRadius.circular(height),
               border: Border.all(
-                color: CupertinoColors.systemGrey3,
-                width: 2,
+                color: CupertinoColors.systemGrey2,
+                width: 1,
               ),
             ),
-            // child: const Icon(
-            //   CupertinoIcons.drop_triangle,
-            //   color: CupertinoColors.white,
-            // ),
           ),
         ),
       ],
     );
-    return Container(
-      color: CupertinoTheme.brightnessOf(context) == Brightness.dark
-          ? Color(0xff2b2b2b)
-          : CupertinoColors.systemGrey5,
-      width: MediaQuery.of(context).size.width * 1,
-      // height: 100,
-      child: FoodListTile(food: food),
-    );
   }
 }
 
+    // return Container(
+    //   color: CupertinoTheme.brightnessOf(context) == Brightness.dark
+    //       ? Color(0xff2b2b2b)
+    //       : CupertinoColors.systemGrey5,
+    //   width: MediaQuery.of(context).size.width * 1,
+    //   // height: 100,
+    //   child: FoodListTile(food: food),
+    // );
     // return Container(
     //   color: CupertinoTheme.brightnessOf(context) == Brightness.dark
     //       ? Color(0xff2b2b2b)

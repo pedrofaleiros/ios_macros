@@ -40,51 +40,37 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
     final foodsController = context.read<FoodViewmodel>();
 
     return Observer(
-      builder: (_) => Stack(
-        alignment: Alignment.bottomCenter,
+      builder: (_) => Column(
         children: [
-          Column(
-            children: [
-              _searchFoodTextField(foodsController, token),
-              Expanded(
-                child: foodsController.isLoading
-                    ? const LoadingPage()
-                    : ListView.builder(
-                        itemCount: foodsController.foods.length,
-                        itemBuilder: (context, index) {
-                          final food = foodsController.foods[index];
+          _searchFoodTextField(foodsController, token),
+          Expanded(
+            child: foodsController.isLoading
+                ? const LoadingPage()
+                : ListView.builder(
+                    itemCount: foodsController.foods.length,
+                    itemBuilder: (context, index) {
+                      final food = foodsController.foods[index];
 
-                          return Column(
-                            children: [
-                              if (_showLabel(index, foodsController))
-                                LetterLabel(
-                                  text: food.name[0],
-                                ),
-                              DraggableFood(
-                                scrollController: scrollController,
-                                food: food,
-                              ),
-                              if (_lastItem(index, foodsController))
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2,
-                                  width: double.infinity,
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
-            ],
+                      return Column(
+                        children: [
+                          if (_showLabel(index, foodsController))
+                            LetterLabel(
+                              text: food.name[0],
+                            ),
+                          DraggableFood(
+                            scrollController: scrollController,
+                            food: food,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
           ),
           MealsTargetList(scrollController: scrollController),
         ],
       ),
     );
   }
-
-  bool _lastItem(int index, FoodViewmodel foodsController) =>
-      index == foodsController.foods.length - 1;
 
   bool _showLabel(int index, FoodViewmodel foodsController) {
     return index == 0 ||

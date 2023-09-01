@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/meals_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/profile_page.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class HomePageContent extends StatelessWidget {
   });
 
   List<Widget> get pages => const [
-        TestPage(),
+        ProfilePage(),
         MealsPage(),
         FoodsPage(),
       ];
@@ -69,27 +70,6 @@ class HomePageContent extends StatelessWidget {
         ],
       ),
       tabBuilder: (context, index) => pages[index],
-    );
-  }
-}
-
-class TestPage extends StatelessWidget {
-  const TestPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: SafeArea(
-        child: Center(
-          child: CupertinoButton(
-            onPressed: () async {
-              context.read<MealViewmodel>().meals.clear();
-              await context.read<AuthViewmodel>().logout();
-            },
-            child: const Text('Logout'),
-          ),
-        ),
-      ),
     );
   }
 }

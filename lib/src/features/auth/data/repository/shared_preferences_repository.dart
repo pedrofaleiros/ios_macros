@@ -21,7 +21,7 @@ class SharedPreferencesRepository {
 
   Future<void> logout() async {
     final shared = await SharedPreferences.getInstance();
-    await shared.clear();
+    await shared.remove(SPK.USER_LOGGED_KEY);
   }
 }
 
