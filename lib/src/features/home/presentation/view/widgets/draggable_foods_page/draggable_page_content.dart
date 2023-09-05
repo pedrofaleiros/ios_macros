@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/draggable_food.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/letter_label.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meals_target_list.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +29,7 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
       padding: const EdgeInsets.all(8.0),
       child: CupertinoSearchTextField(
         controller: textController,
-        onSubmitted: (value) async => await foodsController.getFoodsWithName(
+        onChanged: (value) async => await foodsController.getFoodsWithName(
           token,
           textController.text,
         ),
@@ -40,34 +43,45 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
     final foodsController = context.read<FoodViewmodel>();
 
     return Observer(
-      builder: (_) => Column(
-        children: [
-          _searchFoodTextField(foodsController, token),
-          Expanded(
-            child: foodsController.isLoading
-                ? const LoadingPage()
-                : ListView.builder(
-                    itemCount: foodsController.foods.length,
-                    itemBuilder: (context, index) {
-                      final food = foodsController.foods[index];
+      builder: (_) => KeyboardVisibilityBuilder(
+        builder: (context, isVisible) {
+          return Column(
+            children: [
+              _searchFoodTextField(foodsController, token),
+              Expanded(
+                child: foodsController.isLoading
+                    ? const LoadingPage()
+                    : ListView.builder(
+                        itemCount: foodsController.foods.length,
+                        itemBuilder: (context, index) {
+                          final food = foodsController.foods[index];
 
-                      return Column(
-                        children: [
-                          if (_showLabel(index, foodsController))
-                            LetterLabel(
-                              text: food.name[0],
-                            ),
-                          DraggableFood(
-                            scrollController: scrollController,
-                            food: food,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-          ),
-          MealsTargetList(scrollController: scrollController),
-        ],
+                          return Column(
+                            children: [
+                              if (_showLabel(index, foodsController))
+                                LetterLabel(
+                                  text: food.name[0],
+                                ),
+                              DraggableFood(
+                                scrollController: scrollController,
+                                food: food,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+              ),
+              if (!isVisible)
+                context.read<MealViewmodel>().meals.isEmpty
+                    ? CupertinoButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, CreateMealPage.routeName),
+                        child: const Text('Adicionar refeicao'),
+                      )
+                    : MealsTargetList(scrollController: scrollController),
+            ],
+          );
+        },
       ),
     );
   }

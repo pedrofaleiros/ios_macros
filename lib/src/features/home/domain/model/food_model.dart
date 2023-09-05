@@ -53,5 +53,18 @@ class FoodModel {
     );
   }
 
+  factory FoodModel.empty() {
+    return FoodModel(
+      id: '',
+      name: '',
+      kcal: 0.0,
+      carb: 0.0,
+      prot: 0.0,
+      fat: 0.0,
+      fiber: 0.0,
+      liquid: false,
+    );
+  }
+
   String toJson() => json.encode(toMap());
 }

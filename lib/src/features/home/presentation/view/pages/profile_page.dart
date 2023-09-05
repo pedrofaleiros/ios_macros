@@ -46,7 +46,7 @@ class ProfilePage extends StatelessWidget {
                 },
                 child: const CupertinoListTile(
                   // backgroundColor: CupertinoColors.systemFill,
-                  title: Text('Editar Refeições'),
+                  title: Text('Editar alimentos'),
                 ),
               ),
             Container(

@@ -20,6 +20,31 @@ class FoodListTile extends StatelessWidget {
     return FutureBuilder(
       future: getLastAmount(food.id),
       builder: (context, s) {
+        if (s.connectionState == ConnectionState.waiting || !s.hasData) {
+          return CupertinoListTile(
+            title: Text(
+              food.name,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            subtitle: Text('100 ${food.liquid ? "ml" : "g"}'),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${food.kcal} Kcal',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: CupertinoColors.systemMint,
+                      fontWeight: FontWeight.bold),
+                ),
+                MacrosRow(amount: 100, food: food),
+              ],
+            ),
+          );
+        }
+
         return CupertinoListTile(
           title: Text(
             food.name,
@@ -29,7 +54,8 @@ class FoodListTile extends StatelessWidget {
           ),
           subtitle: s.connectionState == ConnectionState.waiting
               ? const CupertinoActivityIndicator(radius: 5)
-              : Text('${s.data} ${food.liquid ? "ml" : "g"}'),
+              : Text(
+                  '${s.data!.toStringAsFixed(0)} ${food.liquid ? "ml" : "g"}'),
           trailing: s.connectionState == ConnectionState.waiting
               ? const CupertinoActivityIndicator(radius: 5)
               : Column(

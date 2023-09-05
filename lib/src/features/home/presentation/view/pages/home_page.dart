@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/meals_page.dart';
@@ -27,7 +28,7 @@ class HomePage extends StatelessWidget {
       future: init(context),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingPage();
+          return const LoadingPage(message: 'Carregando refeições...',);
         }
 
         return const HomePageContent();
@@ -65,7 +66,7 @@ class HomePageContent extends StatelessWidget {
             activeIcon: Icon(CupertinoIcons.house_fill),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.line_horizontal_3),
+            icon: Icon(FontAwesomeIcons.appleWhole),
           ),
         ],
       ),

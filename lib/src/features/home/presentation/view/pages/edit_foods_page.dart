@@ -31,6 +31,7 @@ class _EditFoodsPageState extends State<EditFoodsPage> {
 
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.systemOrange,
         middle: const Text('Editar alimentos'),
         trailing: CupertinoButton(
           alignment: Alignment.centerRight,

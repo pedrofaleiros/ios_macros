@@ -6,12 +6,13 @@ class AmountAlertDialog extends StatelessWidget {
     required this.focus,
     required this.textController,
     required this.dfAmount,
+    required this.name,
   });
 
   final FocusNode focus;
   final TextEditingController textController;
   final double dfAmount;
-
+  final String name;
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -19,12 +20,12 @@ class AmountAlertDialog extends StatelessWidget {
     });
 
     return CupertinoAlertDialog(
-      title: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text('Selecione a quantidade'),
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text('Adicionar "$name"'),
       ),
       content: CupertinoTextField(
-        placeholder: '$dfAmount',
+        placeholder: 'Quantidade: $dfAmount',
         clearButtonMode: OverlayVisibilityMode.editing,
         focusNode: focus,
         controller: textController,

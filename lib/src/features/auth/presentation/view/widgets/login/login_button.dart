@@ -16,7 +16,7 @@ class LoginButton extends StatelessWidget {
       child: Observer(
         builder: (context) => auth.isLoading
             ? const CupertinoActivityIndicator()
-            : const Text('Login'),
+            : const Text('Login', style: TextStyle(color: CupertinoColors.white),),
       ),
       onPressed: () async => await auth.login(loginController.user),
     );

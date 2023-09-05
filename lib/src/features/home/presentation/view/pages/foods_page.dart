@@ -39,7 +39,7 @@ class _FoodsPageState extends State<FoodsPage> {
           future: foodsController.getFoods(token),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingPage(message: 'Carregando alimentos');
+              return const LoadingPage(message: 'Carregando alimentos...');
             }
 
             return _content(foodsController, token);
@@ -83,7 +83,7 @@ class _FoodsPageState extends State<FoodsPage> {
       child: CupertinoSearchTextField(
         placeholder: 'Buscar por nome',
         controller: textController,
-        onSubmitted: (_) async =>
+        onChanged: (_) async =>
             await foodsController.getFoodsWithName(token, textController.text),
       ),
     );

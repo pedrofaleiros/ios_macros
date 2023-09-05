@@ -19,6 +19,23 @@ dependencies:
   mobx: ^2.1.4
   flutter_mobx: ^2.0.6+5
   
+  flutter_keyboard_visibility: ^5.4.1
+  font_awesome_flutter: ^10.5.0
+
+  flutter_native_splash: ^2.3.2
+  flutter_launcher_icons: ^0.13.1
+
+
+flutter_native_splash:
+  color: "#18181A"
+  image: "assets/app/splash.png"
+  android: true
+
+flutter_icons:
+  image_path: "assets/app/icon.png"
+  android: "launcher_icon"
+  # adaptative_icon_background: 
+  adaptative_icon_foreground: "assets/app/icon-android.png"
 
 dev_dependencies:
   flutter_test:

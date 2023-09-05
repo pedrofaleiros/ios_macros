@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/feedback.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/foods_list_tile.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
+import 'package:provider/provider.dart';
+
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class DraggableFood extends StatelessWidget {
   const DraggableFood({
@@ -15,20 +19,25 @@ class DraggableFood extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LongPressDraggable<FoodModel>(
-      data: food,
-      // dragAnchorStrategy: childDragAnchorStrategy,
-      dragAnchorStrategy: pointerDragAnchorStrategy,
-      onDragUpdate: (details) => handleDragUpdate(
-        context,
-        details,
-        scrollController,
-      ),
-      feedback: FeedBack(food: food),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        child: FoodListTile(food: food),
-      ),
+    return KeyboardVisibilityBuilder(
+      builder: (context, keyboardIsVisible) {
+        return LongPressDraggable<FoodModel>(
+          data: food,
+          // dragAnchorStrategy: childDragAnchorStrategy,
+          dragAnchorStrategy: pointerDragAnchorStrategy,
+          onDragUpdate: (details) => handleDragUpdate(
+            context,
+            details,
+            scrollController,
+            keyboardIsVisible,
+          ),
+          feedback: FeedBack(food: food),
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: FoodListTile(food: food),
+          ),
+        );
+      },
     );
   }
 
@@ -36,8 +45,13 @@ class DraggableFood extends StatelessWidget {
     BuildContext context,
     DragUpdateDetails details,
     ScrollController scrollController,
+    bool keyboardIsVisible,
   ) {
-    double scrollThreshold = 100.0;
+    if (context.read<MealViewmodel>().meals.isEmpty || keyboardIsVisible) {
+      return;
+    }
+
+    double scrollThreshold = 125.0;
     double speed = 5;
 
     if (details.globalPosition.dy <

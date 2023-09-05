@@ -37,6 +37,7 @@ class _CreateFoodPageState extends State<CreateFoodPage> {
     final auth = context.read<AuthViewmodel>();
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
+        backgroundColor: CupertinoColors.systemOrange,
         middle: Text('Criar alimento'),
       ),
       child: SafeArea(

@@ -77,7 +77,7 @@ mixin _$MealViewmodel on _MealViewmodelBase, Store {
       AsyncAction('_MealViewmodelBase.createItem', context: context);
 
   @override
-  Future<void> createItem(String? token, ItemDTO item) {
+  Future<bool> createItem(String? token, ItemDTO item) {
     return _$createItemAsyncAction.run(() => super.createItem(token, item));
   }
 

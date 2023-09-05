@@ -7,7 +7,7 @@ import 'package:mobx/mobx.dart';
 part 'meal_viewmodel.g.dart';
 
 class MealViewmodel = _MealViewmodelBase with _$MealViewmodel;
- 
+
 abstract class _MealViewmodelBase with Store {
   final MealUsecase _usecase = MealUsecase();
 
@@ -22,7 +22,7 @@ abstract class _MealViewmodelBase with Store {
     isLoading = true;
 
     // await Future.delayed(const Duration(milliseconds: 300));
-
+ 
     try {
       final response = await _usecase.getMeals(token);
 
@@ -84,7 +84,7 @@ abstract class _MealViewmodelBase with Store {
   }
 
   @action
-  Future<void> createItem(String? token, ItemDTO item) async {
+  Future<bool> createItem(String? token, ItemDTO item) async {
     isLoading = true;
 
     try {
@@ -93,11 +93,14 @@ abstract class _MealViewmodelBase with Store {
       int index = meals.indexWhere((element) => element.id == item.mealId);
 
       meals[index].addItem(response);
+      isLoading = false;
+      return true;
     } on DioException catch (e) {
       print(e.response!.data);
     } finally {
       isLoading = false;
     }
+    return false;
   }
 
   @action

@@ -4,8 +4,8 @@ import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmod
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_widget.dart';
+import 'package:ios_macros/src/features/home/presentation/view/widgets/meals_is_empty.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
-import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class MealsPage extends StatelessWidget {
@@ -18,47 +18,46 @@ class MealsPage extends StatelessWidget {
 
     return CupertinoPageScaffold(
       navigationBar: _navBar(context),
-      child: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          slivers: [
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                await Future.delayed(const Duration(milliseconds: 300));
-                if (auth.isAuth) {
-                  final token = auth.sessionUser!.token;
-                  await mealsViewmodel.getMeals(token);
-                }
-              },
-            ),
-            Observer(
-              builder: (_) => SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => MealWidget(
-                    meal: mealsViewmodel.meals[index],
+      child: Observer(
+        builder: (_) => mealsViewmodel.meals.isEmpty
+            ? const MealsIsEmpty()
+            : SafeArea(
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
                   ),
-                  childCount: mealsViewmodel.meals.length,
+                  slivers: [
+                    CupertinoSliverRefreshControl(
+                      onRefresh: () async {
+                        if (auth.isAuth) {
+                          final token = auth.sessionUser!.token;
+                          await mealsViewmodel.getMeals(token);
+                        }
+                      },
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        childCount: mealsViewmodel.meals.length,
+                        (context, index) => MealWidget(
+                          meal: mealsViewmodel.meals[index],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
   CupertinoNavigationBar _navBar(BuildContext context) {
-    // final auth = context.read<AuthViewmodel>();
-
     return CupertinoNavigationBar(
       padding: const EdgeInsetsDirectional.all(0),
       trailing: CupertinoButton(
         padding: _padding,
         onPressed: () =>
             Navigator.pushNamed(context, DraggableFoodsPage.routeName),
-        child: const Icon(CupertinoIcons.today),
+        child: const Icon(CupertinoIcons.today_fill),
       ),
       middle: const Text('Refeições'),
       leading: CupertinoButton(

@@ -31,6 +31,17 @@ class UsernameTextField extends StatelessWidget {
       onEditingComplete: () {
         FocusScope.of(context).requestFocus(loginController.passwordFocusNode);
       },
+      onChanged: (value) {
+        if (value.contains(' ')) {
+          loginController.usernameController.text = value.replaceAll(' ', '');
+
+          loginController.usernameController.selection =
+              TextSelection.fromPosition(
+            TextPosition(
+                offset: loginController.usernameController.text.length),
+          );
+        }
+      },
     );
   }
 }

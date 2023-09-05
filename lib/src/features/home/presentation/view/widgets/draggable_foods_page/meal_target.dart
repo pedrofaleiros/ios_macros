@@ -4,6 +4,7 @@ import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmod
 import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/create_item_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/added_text.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/amount_alert_dialog.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_name.dart';
@@ -25,76 +26,15 @@ class MealTarget extends StatefulWidget {
 }
 
 class _MealTargetState extends State<MealTarget> {
-  bool added = false;
   bool isLoading = false;
 
-  Future<void> showAdded() async {
-    if (mounted) {
-      setState(() {
-        added = true;
-      });
-    }
-
-    if (mounted) {
-      await Future.delayed(const Duration(seconds: 2));
-    }
-
-    if (mounted) {
-      setState(() {
-        added = false;
-        // widget.action(false);
-      });
-    }
-  }
-
-  double? validAmount(dynamic response) {
-    try {
-      if (response == null) return null;
-
-      if (double.tryParse(response) == null) return null;
-
-      return double.parse(response);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<void> createItem({
-    required String foodId,
-    required double amount,
-    required String token,
-    required MealViewmodel mealController,
-  }) async {
-    setState(() => isLoading = true);
-    await mealController
-        .createItem(
-      token,
-      ItemDTO(
-        mealId: widget.meal.id,
-        foodId: foodId,
-        amount: amount,
-      ),
-    )
-        .then(
-      (value) {
-        LastAmoutFood().setLastAmount(foodId, amount);
-      },
-    );
-    setState(() => isLoading = false);
-  }
-
-  Future<dynamic> showAmountPopup(BuildContext context, double dfAmount) {
-    return showCupertinoModalPopup(
-      context: context,
-      builder: (_) {
-        TextEditingController textController = TextEditingController();
-        FocusNode focus = FocusNode();
-
-        return AmountAlertDialog(
-          focus: focus,
-          textController: textController,
-          dfAmount: dfAmount,
-        );
+  Future<void> handleAccept(BuildContext context, FoodModel food) async {
+    await Navigator.pushNamed(
+      context,
+      CreateItemPage.routeName,
+      arguments: {
+        'food': food,
+        'mealId': widget.meal.id,
       },
     );
   }
@@ -102,28 +42,7 @@ class _MealTargetState extends State<MealTarget> {
   @override
   Widget build(BuildContext context) {
     return DragTarget<FoodModel>(
-      onAccept: (food) async {
-        final auth = context.read<AuthViewmodel>();
-        if (!auth.isAuth) return;
-        final token = auth.sessionUser!.token;
-        final mealController = context.read<MealViewmodel>();
-
-        await LastAmoutFood().getLastAmount(food.id).then((dfAmount) async {
-          final response = await showAmountPopup(context, dfAmount);
-
-          final amount = validAmount(response);
-
-          if (amount != null) {
-            await createItem(
-              mealController: mealController,
-              token: token,
-              foodId: food.id,
-              amount: amount,
-            );
-            await showAdded();
-          }
-        });
-      },
+      onAccept: (food) => handleAccept(context, food),
       builder: (context, foods, list) {
         return Container(
           width: 125.0,
@@ -135,7 +54,7 @@ class _MealTargetState extends State<MealTarget> {
           child: Container(
             decoration: BoxDecoration(
               color: _chooseColor(foods, context),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: CupertinoColors.opaqueSeparator,
                 width: 0,
@@ -155,13 +74,6 @@ class _MealTargetState extends State<MealTarget> {
       children: [
         MealTargetTime(hour: widget.meal.hour, minutes: widget.meal.minutes),
         MealTargetName(name: widget.meal.name),
-        if (isLoading)
-          const Padding(
-            padding: EdgeInsets.all(4.0),
-            child: CupertinoActivityIndicator(),
-          )
-        else if (added)
-          const AddedText(),
       ],
     );
   }
