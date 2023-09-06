@@ -25,6 +25,9 @@ class DraggableFood extends StatelessWidget {
           data: food,
           // dragAnchorStrategy: childDragAnchorStrategy,
           dragAnchorStrategy: pointerDragAnchorStrategy,
+          onDragStarted: () {
+            FocusScope.of(context).unfocus();
+          },
           onDragUpdate: (details) => handleDragUpdate(
             context,
             details,

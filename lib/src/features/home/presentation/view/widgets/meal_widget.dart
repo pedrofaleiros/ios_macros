@@ -22,7 +22,7 @@ class MealWidget extends StatelessWidget {
         // additionalDividerMargin: 0,
         dividerMargin: 0,
         hasLeading: false,
-        topMargin: 0,
+        topMargin: 4,
         children: [
           for (var item in meal.items) ItemListTile(item: item),
           // AddItemButton(),

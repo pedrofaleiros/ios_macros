@@ -85,6 +85,6 @@ class _MealTargetState extends State<MealTarget> {
             : CupertinoColors.white
         : CupertinoTheme.brightnessOf(context) == Brightness.dark
             ? CupertinoColors.label
-            : CupertinoColors.systemGrey5;
+            : CupertinoColors.systemGrey6;
   }
 }

@@ -85,7 +85,69 @@ class PageContent extends StatefulWidget {
 class _PageContentState extends State<PageContent> {
   TextEditingController textController = TextEditingController();
 
+  FocusNode focus = FocusNode();
+
   double amount = 100;
+
+  void initState() {
+    super.initState();
+    // focus = FocusNode();
+
+    // Dê o foco ao TextField logo após a inicialização
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focus.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Limpeza: descarte o FocusNode quando o widget for destruído
+    focus.dispose();
+    super.dispose();
+  }
+
+  Future<void> addItem(BuildContext context, String foodId) async {
+    if (textController.text.isEmpty) {
+      amount = widget.amount;
+    } else if (double.tryParse(textController.text) == null ||
+        double.parse(textController.text) <= 0) {
+      return;
+    }
+
+    final auth = context.read<AuthViewmodel>();
+
+    if (auth.isAuth) {
+      final token = auth.sessionUser!.token;
+
+      await context
+          .read<MealViewmodel>()
+          .createItem(
+            token,
+            ItemDTO(
+              mealId: widget.mealId,
+              foodId: foodId,
+              amount: amount,
+            ),
+          )
+          .then(
+        (value) async {
+          if (value) {
+            await LastAmoutFood()
+                .setLastAmount(
+              foodId,
+              amount,
+            )
+                .then(
+              (value) {
+                context.read<FoodViewmodel>().force();
+                Navigator.pop(context);
+              },
+            );
+          }
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +157,12 @@ class _PageContentState extends State<PageContent> {
       child: Column(
         children: [
           CupertinoTextField(
+            focusNode: focus,
             controller: textController,
             onChanged: (value) => setState(
               () => amount = double.tryParse(value) ?? widget.amount,
             ),
+            onSubmitted: (value) => addItem(context, food.id),
             textAlign: TextAlign.end,
             keyboardType: TextInputType.number,
             placeholder: '${widget.amount}',
@@ -134,48 +198,7 @@ class _PageContentState extends State<PageContent> {
             color: CupertinoColors.systemOrange,
           ),
           CupertinoButton.filled(
-            onPressed: () async {
-              if (textController.text.isEmpty) {
-                amount = widget.amount;
-              } else if (double.tryParse(textController.text) == null ||
-                  double.parse(textController.text) <= 0) {
-                return;
-              }
-
-              final auth = context.read<AuthViewmodel>();
-
-              if (auth.isAuth) {
-                final token = auth.sessionUser!.token;
-
-                await context
-                    .read<MealViewmodel>()
-                    .createItem(
-                      token,
-                      ItemDTO(
-                        mealId: widget.mealId,
-                        foodId: food.id,
-                        amount: amount,
-                      ),
-                    )
-                    .then(
-                  (value) async {
-                    if (value) {
-                      await LastAmoutFood()
-                          .setLastAmount(
-                            food.id,
-                            amount,
-                          )
-                          .then(
-                            (value) {
-                              context.read<FoodViewmodel>().force();
-                              Navigator.pop(context);
-                            },
-                          );
-                    }
-                  },
-                );
-              }
-            },
+            onPressed: () => addItem(context, food.id),
             child: const Text(
               'Adicionar',
               style: TextStyle(
