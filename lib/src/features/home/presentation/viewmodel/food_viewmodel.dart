@@ -54,6 +54,13 @@ abstract class _FoodViewmodelBase with Store {
   }
 
   @action
+  void force() {
+    final food = FoodModel.empty();
+    foods.add(food);
+    foods.removeWhere((element) => element.id == food.id);
+  }
+
+  @action
   Future<bool> createFood(String? token, FoodDTO food) async {
     isLoading = true;
 

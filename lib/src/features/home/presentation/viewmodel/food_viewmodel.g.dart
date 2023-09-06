@@ -74,6 +74,20 @@ mixin _$FoodViewmodel on _FoodViewmodelBase, Store {
     return _$deleteFoodAsyncAction.run(() => super.deleteFood(token, foodId));
   }
 
+  late final _$_FoodViewmodelBaseActionController =
+      ActionController(name: '_FoodViewmodelBase', context: context);
+
+  @override
+  void force() {
+    final _$actionInfo = _$_FoodViewmodelBaseActionController.startAction(
+        name: '_FoodViewmodelBase.force');
+    try {
+      return super.force();
+    } finally {
+      _$_FoodViewmodelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

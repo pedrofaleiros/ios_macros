@@ -55,7 +55,7 @@ class FoodModel {
 
   factory FoodModel.empty() {
     return FoodModel(
-      id: '',
+      id: 'empty',
       name: '',
       kcal: 0.0,
       carb: 0.0,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/last_amount_food.dart';
 import 'package:ios_macros/src/utils/widgets/loading_page.dart';
@@ -165,7 +166,10 @@ class _PageContentState extends State<PageContent> {
                             amount,
                           )
                           .then(
-                            (value) => Navigator.pop(context),
+                            (value) {
+                              context.read<FoodViewmodel>().force();
+                              Navigator.pop(context);
+                            },
                           );
                     }
                   },

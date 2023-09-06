@@ -39,50 +39,51 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
 
   @override
   Widget build(BuildContext context) {
-    final token = context.read<AuthViewmodel>().sessionUser!.token;
-    final foodsController = context.read<FoodViewmodel>();
+    return KeyboardVisibilityBuilder(
+      builder: (context, isVisible) {
+        return Observer(
+          builder: (context) {
+            final token = context.read<AuthViewmodel>().sessionUser!.token;
+            final foodsController = context.read<FoodViewmodel>();
+            final mealsController = context.read<MealViewmodel>();
 
-    return Observer(
-      builder: (_) => KeyboardVisibilityBuilder(
-        builder: (context, isVisible) {
-          return Column(
-            children: [
-              _searchFoodTextField(foodsController, token),
-              Expanded(
-                child: foodsController.isLoading
-                    ? const LoadingPage()
-                    : ListView.builder(
-                        itemCount: foodsController.foods.length,
-                        itemBuilder: (context, index) {
-                          final food = foodsController.foods[index];
+            return Column(
+              children: [
+                _searchFoodTextField(foodsController, token),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: foodsController.foods.length,
+                    itemBuilder: (context, index) {
+                      final food = foodsController.foods[index];
 
-                          return Column(
-                            children: [
-                              if (_showLabel(index, foodsController))
-                                LetterLabel(
-                                  text: food.name[0],
-                                ),
-                              DraggableFood(
-                                scrollController: scrollController,
-                                food: food,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
-              if (!isVisible)
-                context.read<MealViewmodel>().meals.isEmpty
-                    ? CupertinoButton(
-                        onPressed: () => Navigator.pushNamed(
-                            context, CreateMealPage.routeName),
-                        child: const Text('Adicionar refeicao'),
-                      )
-                    : MealsTargetList(scrollController: scrollController),
-            ],
-          );
-        },
-      ),
+                      return Column(
+                        children: [
+                          if (_showLabel(index, foodsController))
+                            LetterLabel(
+                              text: food.name[0],
+                            ),
+                          DraggableFood(
+                            scrollController: scrollController,
+                            food: food,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                if (!isVisible)
+                  mealsController.meals.isEmpty
+                      ? CupertinoButton(
+                          onPressed: () => Navigator.pushNamed(
+                              context, CreateMealPage.routeName),
+                          child: const Text('Adicionar refeicao'),
+                        )
+                      : MealsTargetList(scrollController: scrollController),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

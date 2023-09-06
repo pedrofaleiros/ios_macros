@@ -27,15 +27,15 @@ dependencies:
 
 
 flutter_native_splash:
-  color: "#18181A"
-  image: "assets/app/splash.png"
+  color: "#000000"
+  image: "assets/app/splash-logo.png"
   android: true
 
 flutter_icons:
-  image_path: "assets/app/icon.png"
+  image_path: "assets/app/icon-logo.png"
   android: "launcher_icon"
-  # adaptative_icon_background: 
-  adaptative_icon_foreground: "assets/app/icon-android.png"
+  adaptative_icon_background: "#000000"
+  adaptative_icon_foreground: "assets/app/icon-android-logo.png"
 
 dev_dependencies:
   flutter_test:

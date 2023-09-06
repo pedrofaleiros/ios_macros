@@ -28,7 +28,9 @@ class HomePage extends StatelessWidget {
       future: init(context),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingPage(message: 'Carregando refeições...',);
+          return const LoadingPage(
+            message: 'Carregando refeições...',
+          );
         }
 
         return const HomePageContent();
@@ -62,11 +64,11 @@ class HomePageContent extends StatelessWidget {
             activeIcon: Icon(CupertinoIcons.person_fill),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house),
+            icon: Icon(CupertinoIcons.house_fill),
             activeIcon: Icon(CupertinoIcons.house_fill),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.appleWhole),
+            icon: Icon(FontAwesomeIcons.chartSimple),
           ),
         ],
       ),
