@@ -21,3 +21,7 @@
 ## Copie e cole alimentos
 
 <img src="https://github.com/pedrofaleiros/macros_app/assets/62016599/f959f91b-12b8-4baa-8075-d1a349c9376a" width="300" />
+
+## Tema Escuro
+
+<img src="https://github.com/pedrofaleiros/macros_app/assets/62016599/c5d3a4c2-a5d7-4611-976c-4e155e07efe3" width="300" />
