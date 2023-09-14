@@ -1,4 +1,4 @@
-# Contador de calorias
+# Contador de calorias e macros
 
 ## Tema Escuro
 
