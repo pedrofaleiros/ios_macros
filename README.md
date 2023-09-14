@@ -1,16 +1,18 @@
-# ios_macros
+# Contador de calorias
 
-A new Flutter project.
+## Crie suas refeições
 
-## Getting Started
+  - GIF criando refeições
 
-This project is a starting point for a Flutter application.
+## Adicionando alimentos
 
-A few resources to get you started if this is your first Flutter project:
+  - GIF arrastando alimentos
+  - GIF adicionando por toque
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Excluindo alimentos e refeições
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  - GIF excluindo alimentos e refeições
+
+## Copie e cole alimentos
+
+  - GIF copiando e colando alimentos

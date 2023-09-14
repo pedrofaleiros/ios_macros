@@ -7,9 +7,13 @@ class FoodListTile extends StatelessWidget {
   const FoodListTile({
     super.key,
     required this.food,
+    required this.selected,
+    required this.amount,
   });
 
   final FoodModel food;
+  final bool selected;
+  final double amount;
 
   Future<double> getLastAmount(String foodId) async {
     return LastAmoutFood().getLastAmount(foodId);
@@ -17,62 +21,35 @@ class FoodListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getLastAmount(food.id),
-      builder: (context, s) {
-        if (s.connectionState == ConnectionState.waiting || !s.hasData) {
-          return CupertinoListTile(
-            title: Text(
-              food.name,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            subtitle: Text('100 ${food.liquid ? "ml" : "g"}'),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${food.kcal} Kcal',
-                  style: const TextStyle(
-                      fontSize: 14,
-                      color: CupertinoColors.systemMint,
-                      fontWeight: FontWeight.bold),
-                ),
-                MacrosRow(amount: 100, food: food),
-              ],
-            ),
-          );
-        }
-
-        return CupertinoListTile(
-          title: Text(
-            food.name,
+    return CupertinoListTile(
+      leading: selected
+          ? const Icon(
+              CupertinoIcons.add_circled,
+              color: CupertinoColors.systemGreen,
+            )
+          : null,
+      title: Text(
+        food.name,
+        style: const TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      subtitle: Text(
+        '${amount.toStringAsFixed(0)} ${food.liquid ? "ml" : "g"}',
+      ),
+      trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            '${(food.kcal / 100 * amount).toStringAsFixed(0)} Kcal',
             style: const TextStyle(
-              fontSize: 16,
-            ),
+                fontSize: 14,
+                color: CupertinoColors.systemMint,
+                fontWeight: FontWeight.bold),
           ),
-          subtitle: s.connectionState == ConnectionState.waiting
-              ? const CupertinoActivityIndicator(radius: 5)
-              : Text(
-                  '${s.data!.toStringAsFixed(0)} ${food.liquid ? "ml" : "g"}'),
-          trailing: s.connectionState == ConnectionState.waiting
-              ? const CupertinoActivityIndicator(radius: 5)
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${(food.kcal / 100 * s.data!).toStringAsFixed(0)} Kcal',
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: CupertinoColors.systemMint,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    MacrosRow(amount: s.data!, food: food),
-                  ],
-                ),
-        );
-      },
+          MacrosRow(amount: amount, food: food),
+        ],
+      ),
     );
   }
 }

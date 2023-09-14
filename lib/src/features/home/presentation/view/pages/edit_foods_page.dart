@@ -104,6 +104,8 @@ class _EditFoodsPageState extends State<EditFoodsPage> {
                               food.name,
                             ),
                             child: FoodListTile(
+                              amount: 100,
+                              selected: false,
                               food: food,
                             ),
                           ),

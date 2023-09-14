@@ -22,7 +22,7 @@ abstract class _MealViewmodelBase with Store {
     isLoading = true;
 
     // await Future.delayed(const Duration(milliseconds: 300));
- 
+
     try {
       final response = await _usecase.getMeals(token);
 
@@ -40,14 +40,17 @@ abstract class _MealViewmodelBase with Store {
 
   @action
   Future<bool> createMeal(String? token, MealDTO meal) async {
+    isLoading = true;
     try {
       final newMeal = await _usecase.createMeal(token, meal);
 
       includeMealSorted(newMeal);
+      isLoading = false;
       return true;
     } catch (e) {
       print(e.toString());
     }
+    isLoading = false;
     return false;
   }
 

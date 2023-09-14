@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/last_amount_food.dart';
@@ -32,34 +34,57 @@ class _CreateItemPageState extends State<CreateItemPage> {
     FoodModel food = args['food'] ?? FoodModel.empty();
     String mealId = args['mealId'] ?? '';
 
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(food.name),
-      ),
-      child: SafeArea(
-        child: FutureBuilder(
-          future: getLastAmount(food.id),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const LoadingPage(
-                message: 'Carregando...',
-              );
-            }
+    return WillPopScope(
+      onWillPop: () async {
+        return await showCupertinoModalPopup(
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+            title: const Text('Cancelar?'),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () => Navigator.pop(context, false),
+                isDestructiveAction: true,
+                child: const Text('Não'),
+              ),
+              CupertinoDialogAction(
+                onPressed: () => Navigator.pop(context, true),
+                isDefaultAction: true,
+                child: const Text('Sim'),
+              ),
+            ],
+          ),
+        );
+      },
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(food.name),
+          transitionBetweenRoutes: false,
+        ),
+        child: SafeArea(
+          child: FutureBuilder(
+            future: getLastAmount(food.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LoadingPage(
+                  message: 'Carregando...',
+                );
+              }
 
-            if (snapshot.hasData) {
-              return PageContent(
-                amount: snapshot.data!,
-                food: food,
-                mealId: mealId,
-              );
-            } else {
-              return PageContent(
-                amount: 100,
-                food: food,
-                mealId: mealId,
-              );
-            }
-          },
+              if (snapshot.hasData) {
+                return PageContent(
+                  amount: snapshot.data!,
+                  food: food,
+                  mealId: mealId,
+                );
+              } else {
+                return PageContent(
+                  amount: 100,
+                  food: food,
+                  mealId: mealId,
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -89,11 +114,9 @@ class _PageContentState extends State<PageContent> {
 
   double amount = 100;
 
+  @override
   void initState() {
     super.initState();
-    // focus = FocusNode();
-
-    // Dê o foco ao TextField logo após a inicialização
     WidgetsBinding.instance.addPostFrameCallback((_) {
       focus.requestFocus();
     });
@@ -140,6 +163,7 @@ class _PageContentState extends State<PageContent> {
                 .then(
               (value) {
                 context.read<FoodViewmodel>().force();
+                context.read<AddItemViewmodel>().clear();
                 Navigator.pop(context);
               },
             );
@@ -197,14 +221,23 @@ class _PageContentState extends State<PageContent> {
             amount: '${(food.fat / 100 * amount).toStringAsFixed(1)} g',
             color: CupertinoColors.systemOrange,
           ),
-          CupertinoButton.filled(
-            onPressed: () => addItem(context, food.id),
-            child: const Text(
-              'Adicionar',
-              style: TextStyle(
-                color: CupertinoColors.white,
-              ),
-            ),
+          Observer(
+            builder: (_) {
+              final mealViewmodel = context.read<MealViewmodel>();
+              return CupertinoButton.filled(
+                onPressed: mealViewmodel.isLoading
+                    ? null
+                    : () => addItem(context, food.id),
+                child: mealViewmodel.isLoading
+                    ? const CupertinoActivityIndicator()
+                    : const Text(
+                        'Adicionar',
+                        style: TextStyle(
+                          color: CupertinoColors.white,
+                        ),
+                      ),
+              );
+            },
           ),
         ],
       ),

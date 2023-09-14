@@ -10,6 +10,7 @@ import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/home_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/profile_page.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/copy_cut_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
@@ -37,6 +38,9 @@ class AppWidget extends StatelessWidget {
         ),
         Provider<CopyPasteViewmodel>(
           create: (context) => CopyPasteViewmodel(),
+        ),
+        Provider<AddItemViewmodel>(
+          create: (context) => AddItemViewmodel(),
         ),
       ],
       child: CupertinoApp(

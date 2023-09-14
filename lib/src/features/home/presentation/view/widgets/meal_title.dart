@@ -3,6 +3,7 @@ import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmod
 import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/copy_cut_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -80,13 +81,6 @@ class MealTitle extends StatelessWidget {
             child: const Text('Apagar'),
           ),
           CupertinoActionSheetAction(
-            onPressed: () {
-              context.read<CopyPasteViewmodel>().copy(meal);
-              Navigator.pop(context);
-            },
-            child: const Text('Copiar'),
-          ),
-          CupertinoActionSheetAction(
             onPressed: () async {
               final list = context.read<CopyPasteViewmodel>().paste();
               final mealsController = context.read<MealViewmodel>();
@@ -99,7 +93,24 @@ class MealTitle extends StatelessWidget {
                 (value) => Navigator.pop(context),
               );
             },
-            child: const Text('Colar'),
+            child: const Text('Colar alimentos'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              context.read<CopyPasteViewmodel>().copy(meal);
+              Navigator.pop(context);
+            },
+            child: const Text('Copiar alimentos'),
+          ),
+          
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              await Navigator.pushNamed(context, DraggableFoodsPage.routeName)
+                  .then(
+                (value) => Navigator.pop(context),
+              );
+            },
+            child: const Text('Adicionar alimentos'),
           ),
         ],
         cancelButton: CupertinoActionSheetAction(

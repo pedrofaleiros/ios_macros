@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/draggable_page_content.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +15,12 @@ class DraggableFoodsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final token = context.read<AuthViewmodel>().sessionUser!.token;
     final foodsController = context.read<FoodViewmodel>();
+    context.read<AddItemViewmodel>().clear();
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Adicione alimentos'),
+        transitionBetweenRoutes: false,
       ),
       child: SafeArea(
         child: FutureBuilder(

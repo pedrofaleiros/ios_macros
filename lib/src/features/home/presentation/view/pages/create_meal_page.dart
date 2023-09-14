@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/data/dto/meal_dto.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
@@ -34,6 +35,7 @@ class _CreateMealPageState extends State<CreateMealPage> {
             children: [
               Expanded(
                 child: CupertinoTimerPicker(
+                  minuteInterval: 5,
                   mode: CupertinoTimerPickerMode.hm,
                   initialTimerDuration: timePicker,
                   onTimerDurationChanged: (value) => timePicker = value,
@@ -75,6 +77,16 @@ class _CreateMealPageState extends State<CreateMealPage> {
   bool isLoading = false;
   String? errorText;
 
+  FocusNode focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focus.requestFocus();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     int hour;
@@ -92,9 +104,11 @@ class _CreateMealPageState extends State<CreateMealPage> {
           child: Column(
             children: [
               CupertinoTextField(
+                focusNode: focus,
                 controller: nameController,
                 placeholder: 'Digite o nome da refeição',
                 clearButtonMode: OverlayVisibilityMode.editing,
+                onEditingComplete: () async => _showTimePicker(context),
               ),
               const SizedBox(height: 15),
               Row(
@@ -127,53 +141,59 @@ class _CreateMealPageState extends State<CreateMealPage> {
               const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
-                child: CupertinoButton.filled(
-                  child: isLoading
-                      ? const CupertinoActivityIndicator()
-                      : const Text(
-                          'Adicionar',
-                          style: TextStyle(
-                            color: CupertinoColors.white,
+                child: Observer(builder: (context) {
+                  final mealViewmodel = context.read<MealViewmodel>();
+                  return CupertinoButton.filled(
+                    onPressed: mealViewmodel.isLoading
+                        ? null
+                        : () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            validText();
+
+                            if (errorText != null) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              return;
+                            }
+
+                            final token = context
+                                .read<AuthViewmodel>()
+                                .sessionUser!
+                                .token;
+                            await mealViewmodel
+                                .createMeal(
+                              token,
+                              MealDTO(
+                                name: nameController.text,
+                                hour: hour,
+                                minutes: minute,
+                              ),
+                            )
+                                .then(
+                              (value) {
+                                if (value == true) {
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                              },
+                            );
+                          },
+                    child: mealViewmodel.isLoading
+                        ? const CupertinoActivityIndicator()
+                        : const Text(
+                            'Adicionar',
+                            style: TextStyle(
+                              color: CupertinoColors.white,
+                            ),
                           ),
-                        ),
-                  onPressed: () async {
-                    setState(() {
-                      isLoading = true;
-                    });
-
-                    validText();
-
-                    if (errorText != null) {
-                      setState(() {
-                        isLoading = false;
-                      });
-                      return;
-                    }
-
-                    final token =
-                        context.read<AuthViewmodel>().sessionUser!.token;
-                    await context
-                        .read<MealViewmodel>()
-                        .createMeal(
-                          token,
-                          MealDTO(
-                            name: nameController.text,
-                            hour: hour,
-                            minutes: minute,
-                          ),
-                        )
-                        .then(
-                      (value) {
-                        if (value == true) {
-                          Navigator.pop(context);
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                      },
-                    );
-                  },
-                ),
+                  );
+                }),
               ),
               const SizedBox(height: 15),
               Text(

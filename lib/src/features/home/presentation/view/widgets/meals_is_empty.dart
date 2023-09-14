@@ -8,13 +8,25 @@ class MealsIsEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: CupertinoButton(
-          onPressed: () =>
-              Navigator.pushNamed(context, CreateMealPage.routeName),
-          child: const Text('Adicionar refeicao'),
-        ),
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        childCount: 1,
+        (context, index) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Nenhuma refeição'),
+                CupertinoButton(
+                  onPressed: () =>
+                      Navigator.pushNamed(context, CreateMealPage.routeName),
+                  child: const Text('Adicionar'),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

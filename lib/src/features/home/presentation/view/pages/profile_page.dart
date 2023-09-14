@@ -24,7 +24,27 @@ class ProfilePage extends StatelessWidget {
             CupertinoButton(
               padding: const EdgeInsets.all(0),
               onPressed: () async {
-                await auth.logout();
+                final response = await showCupertinoModalPopup(
+                  context: context,
+                  builder: (_) => CupertinoAlertDialog(
+                    title: const Text('Fazer logout?'),
+                    actions: [
+                      CupertinoDialogAction(
+                        onPressed: () => Navigator.pop(context, false),
+                        isDestructiveAction: true,
+                        child: const Text('Não'),
+                      ),
+                      CupertinoDialogAction(
+                        onPressed: () => Navigator.pop(context, true),
+                        isDefaultAction: true,
+                        child: const Text('Sim'),
+                      ),
+                    ],
+                  ),
+                );
+                if (response) {
+                  await auth.logout();
+                }
               },
               child: const CupertinoListTile(
                 // backgroundColor: CupertinoColors.systemFill,

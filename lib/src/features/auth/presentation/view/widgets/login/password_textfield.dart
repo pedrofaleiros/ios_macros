@@ -37,7 +37,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     final auth = context.read<AuthViewmodel>();
 
     return CupertinoTextField(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
       decoration: BoxDecoration(
         color: CupertinoColors.systemGrey6,
         borderRadius: BorderRadius.circular(8.0),

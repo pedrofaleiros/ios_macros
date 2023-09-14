@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class DioClient {
   static const baseUrl = 'http://172.30.129.176:3333';
-  // static const baseUrl = 'http://172.30.152.237';
+  // static const baseUrl = 'http://192.168.0.129:3333';
 
   static Dio getDio() {
     final dio = Dio();

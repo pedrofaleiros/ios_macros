@@ -66,6 +66,8 @@ class _FoodsPageState extends State<FoodsPage> {
                             text: foodsController.foods[index].name[0],
                           ),
                         FoodListTile(
+                          amount: 100,
+                          selected: false,
                           food: foodsController.foods[index],
                         ),
                       ],

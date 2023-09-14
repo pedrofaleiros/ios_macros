@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/feedback.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/foods_list_tile.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -35,10 +37,19 @@ class DraggableFood extends StatelessWidget {
             keyboardIsVisible,
           ),
           feedback: FeedBack(food: food),
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            child: FoodListTile(food: food),
-          ),
+          child: Observer(builder: (_) {
+            final addItemViewmodel = context.read<AddItemViewmodel>();
+            return GestureDetector(
+              onTap: () => addItemViewmodel.copy(food),
+              behavior: HitTestBehavior.opaque,
+              child: FoodListTile(
+                amount: 100,
+                food: food,
+                selected: (addItemViewmodel.food != null) &&
+                    (addItemViewmodel.food!.id == food.id),
+              ),
+            );
+          }),
         );
       },
     );

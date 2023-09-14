@@ -9,6 +9,7 @@ import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/amount_alert_dialog.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_name.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_time.dart';
+import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:ios_macros/src/utils/last_amount_food.dart';
 import 'package:provider/provider.dart';
@@ -41,29 +42,37 @@ class _MealTargetState extends State<MealTarget> {
 
   @override
   Widget build(BuildContext context) {
-    return DragTarget<FoodModel>(
-      onAccept: (food) => handleAccept(context, food),
-      builder: (context, foods, list) {
-        return Container(
-          width: 125.0,
-          color: CupertinoColors.black.withOpacity(0),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 16,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _chooseColor(foods, context),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: CupertinoColors.opaqueSeparator,
-                width: 0,
-              ),
-            ),
-            child: _content,
-          ),
-        );
+    return GestureDetector(
+      onLongPress: () {
+        final food = context.read<AddItemViewmodel>().food;
+        if (food != null) {
+          handleAccept(context, food);
+        }
       },
+      child: DragTarget<FoodModel>(
+        onAccept: (food) => handleAccept(context, food),
+        builder: (context, foods, list) {
+          return Container(
+            width: 125.0,
+            color: CupertinoColors.black.withOpacity(0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 16,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: _chooseColor(foods, context),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: CupertinoColors.opaqueSeparator,
+                  width: 0,
+                ),
+              ),
+              child: _content,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -85,6 +94,6 @@ class _MealTargetState extends State<MealTarget> {
             : CupertinoColors.white
         : CupertinoTheme.brightnessOf(context) == Brightness.dark
             ? CupertinoColors.label
-            : CupertinoColors.systemGrey6;
+            : CupertinoColors.systemGroupedBackground;
   }
 }

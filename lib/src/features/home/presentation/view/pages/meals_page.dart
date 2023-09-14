@@ -20,50 +20,51 @@ class MealsPage extends StatelessWidget {
     return CupertinoPageScaffold(
       // navigationBar: _navBar(context),
       child: Observer(
-        builder: (_) => mealsViewmodel.meals.isEmpty
-            ? const MealsIsEmpty()
-            : SafeArea(
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
+        builder: (_) => SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            slivers: [
+              CupertinoSliverNavigationBar(
+                backgroundColor:
+                    CupertinoTheme.brightnessOf(context) == Brightness.dark
+                        ? CupertinoColors.systemBackground
+                        : null,
+                stretch: false,
+                padding: const EdgeInsetsDirectional.all(0),
+                largeTitle: const Text('Refeições'),
+                leading: CupertinoButton(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(4),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    CreateMealPage.routeName,
                   ),
-                  slivers: [
-                    CupertinoSliverNavigationBar(
-                      backgroundColor: CupertinoTheme.brightnessOf(context) ==
-                              Brightness.dark
-                          ? CupertinoColors.systemBackground
-                          : null,
-                      stretch: false,
-                      // padding: const EdgeInsetsDirectional.all(0),
-                      leading: CupertinoButton(
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          CreateMealPage.routeName,
-                        ),
-                        child: const Text('Adicionar'),
-                      ),
-                      largeTitle: const Text('Refeições'),
-                      trailing: CupertinoButton(
-                        alignment: Alignment.centerRight,
-                        padding: _padding,
-                        onPressed: () => Navigator.pushNamed(
-                            context, DraggableFoodsPage.routeName),
-                        child: const Icon(CupertinoIcons.today_fill),
-                      ),
-                    ),
-                    CupertinoSliverRefreshControl(
-                      onRefresh: () async {
-                        if (auth.isAuth) {
-                          final token = auth.sessionUser!.token;
-                          await mealsViewmodel.getMeals(token);
-                        }
-                      },
-                    ),
-                    _mealsList(mealsViewmodel.meals),
-                  ],
+                  child: const Text('Adicionar'),
+                ),
+                trailing: CupertinoButton(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(4),
+                  onPressed: () => Navigator.pushNamed(
+                      context, DraggableFoodsPage.routeName),
+                  child: const Icon(CupertinoIcons.today_fill),
                 ),
               ),
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  if (auth.isAuth) {
+                    final token = auth.sessionUser!.token;
+                    await mealsViewmodel.getMeals(token);
+                  }
+                },
+              ),
+              mealsViewmodel.meals.isEmpty
+                  ? const MealsIsEmpty()
+                  : _mealsList(mealsViewmodel.meals),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -72,67 +73,125 @@ class MealsPage extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         childCount: meals.length,
-        (context, index) => MealWidget(
-          meal: meals[index],
-        ),
+        (context, index) => index == meals.length - 1
+            ? Column(
+                children: [
+                  MealWidget(meal: meals[index]),
+                  const TotalMacrosWidget(),
+                ],
+              )
+            : MealWidget(meal: meals[index]),
       ),
     );
+  }
+}
 
-/* 
-    lastItem(index, mealsViewmodel)
-            ? _lastItemWidget(
-                mealsViewmodel,
-                index,
-                context,
-              )
-            :  
-*/
+class TotalMacrosWidget extends StatelessWidget {
+  const TotalMacrosWidget({
+    super.key,
+  });
+
+  Map<String, double> getTotalMacros(List<MealModel> list) {
+    double kcal = 0;
+    double carb = 0;
+    double prot = 0;
+    double fats = 0;
+
+    for (var meal in list) {
+      for (var item in meal.items) {
+        kcal += item.food.kcal / 100 * item.amount;
+        carb += item.food.carb / 100 * item.amount;
+        prot += item.food.prot / 100 * item.amount;
+        fats += item.food.fat / 100 * item.amount;
+      }
+    }
+
+    return {
+      "kcal": kcal,
+      "carb": carb,
+      "prot": prot,
+      "fats": fats,
+    };
   }
 
-  Widget _lastItemWidget(
-    MealViewmodel mealsViewmodel,
-    int index,
-    BuildContext context,
-  ) {
-    return Column(
-      children: [
-        MealWidget(
-          meal: mealsViewmodel.meals[index],
-        ),
-        CupertinoButton(
-          onPressed: () => Navigator.pushNamed(
-            context,
-            CreateMealPage.routeName,
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  @override
+  Widget build(BuildContext context) {
+    return Observer(
+      builder: (_) {
+        final meals = context.read<MealViewmodel>().meals;
+
+        final map = getTotalMacros(meals);
+
+        final double kcal = map["kcal"]!;
+        final double carb = map["carb"]!;
+        final double prot = map["prot"]!;
+        final double fats = map["fats"]!;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
             children: [
-              Text('Adicionar refeição'),
-              SizedBox(width: 4),
-              Icon(CupertinoIcons.add)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    'Total:',
+                    style: const TextStyle(
+                      fontSize: 22,
+                    ),
+                  ),
+                  Text(
+                    ' ',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      color: CupertinoColors.systemMint,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${kcal.toInt()} Kcals',
+                    style: const TextStyle(
+                      fontSize: 22,
+                      color: CupertinoColors.systemMint,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    "C: ${carb.toStringAsFixed(1)} g",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.systemRed,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "P: ${prot.toStringAsFixed(1)} g",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.systemBlue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "G: ${fats.toStringAsFixed(1)} g",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: CupertinoColors.systemOrange,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
-        const SizedBox(height: 8),
-      ],
+        );
+      },
     );
   }
-
-  bool lastItem(int index, MealViewmodel mealsViewmodel) =>
-      index == mealsViewmodel.meals.length - 1;
-
-  CupertinoNavigationBar _navBar(BuildContext context) {
-    return CupertinoNavigationBar(
-      padding: const EdgeInsetsDirectional.all(0),
-      trailing: CupertinoButton(
-        padding: _padding,
-        onPressed: () =>
-            Navigator.pushNamed(context, DraggableFoodsPage.routeName),
-        child: const Icon(CupertinoIcons.today_fill),
-      ),
-      middle: const Text('Refeições'),
-    );
-  }
-
-  EdgeInsets get _padding => const EdgeInsets.all(0);
 }
