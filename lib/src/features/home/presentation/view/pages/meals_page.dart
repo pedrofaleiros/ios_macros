@@ -3,9 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/details_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_widget.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meals_is_empty.dart';
+import 'package:ios_macros/src/features/home/presentation/view/widgets/meals_page_navbar.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,6 @@ class MealsPage extends StatelessWidget {
     final mealsViewmodel = context.read<MealViewmodel>();
 
     return CupertinoPageScaffold(
-      // navigationBar: _navBar(context),
       child: Observer(
         builder: (_) => SafeArea(
           child: CustomScrollView(
@@ -26,31 +27,7 @@ class MealsPage extends StatelessWidget {
               parent: AlwaysScrollableScrollPhysics(),
             ),
             slivers: [
-              CupertinoSliverNavigationBar(
-                backgroundColor:
-                    CupertinoTheme.brightnessOf(context) == Brightness.dark
-                        ? CupertinoColors.systemBackground
-                        : null,
-                stretch: false,
-                padding: const EdgeInsetsDirectional.all(0),
-                largeTitle: const Text('Refeições'),
-                leading: CupertinoButton(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(4),
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    CreateMealPage.routeName,
-                  ),
-                  child: const Text('Adicionar'),
-                ),
-                trailing: CupertinoButton(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(4),
-                  onPressed: () => Navigator.pushNamed(
-                      context, DraggableFoodsPage.routeName),
-                  child: const Icon(CupertinoIcons.today_fill),
-                ),
-              ),
+              const MealsPageNavBar(),
               CupertinoSliverRefreshControl(
                 onRefresh: () async {
                   if (auth.isAuth) {
@@ -73,14 +50,16 @@ class MealsPage extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         childCount: meals.length,
-        (context, index) => index == meals.length - 1
+        (context,
+                index) => /* index == meals.length - 1
             ? Column(
                 children: [
                   MealWidget(meal: meals[index]),
                   const TotalMacrosWidget(),
                 ],
               )
-            : MealWidget(meal: meals[index]),
+            : */
+            MealWidget(meal: meals[index]),
       ),
     );
   }

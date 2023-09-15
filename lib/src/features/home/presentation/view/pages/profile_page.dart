@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/HB_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_page.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +74,16 @@ class ProfilePage extends StatelessWidget {
               height: 1,
               width: double.infinity,
               color: CupertinoColors.systemFill,
+            ),
+            CupertinoButton(
+              padding: const EdgeInsets.all(0),
+              onPressed: () {
+                Navigator.pushNamed(context, HBPage.routeName);
+              },
+              child: const CupertinoListTile(
+                // backgroundColor: CupertinoColors.systemFill,
+                title: Text('Harris-Benedict'),
+              ),
             ),
           ],
         ),

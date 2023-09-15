@@ -48,6 +48,22 @@ mixin _$AuthViewmodel on _AuthViewmodelBase, Store {
     });
   }
 
+  late final _$authErrorAtom =
+      Atom(name: '_AuthViewmodelBase.authError', context: context);
+
+  @override
+  String? get authError {
+    _$authErrorAtom.reportRead();
+    return super.authError;
+  }
+
+  @override
+  set authError(String? value) {
+    _$authErrorAtom.reportWrite(value, super.authError, () {
+      super.authError = value;
+    });
+  }
+
   late final _$loginAsyncAction =
       AsyncAction('_AuthViewmodelBase.login', context: context);
 
@@ -60,7 +76,7 @@ mixin _$AuthViewmodel on _AuthViewmodelBase, Store {
       AsyncAction('_AuthViewmodelBase.signup', context: context);
 
   @override
-  Future<void> signup(UserDTO user) {
+  Future<bool> signup(UserDTO user) {
     return _$signupAsyncAction.run(() => super.signup(user));
   }
 
@@ -77,6 +93,7 @@ mixin _$AuthViewmodel on _AuthViewmodelBase, Store {
     return '''
 sessionUser: ${sessionUser},
 isLoading: ${isLoading},
+authError: ${authError},
 isAuth: ${isAuth}
     ''';
   }

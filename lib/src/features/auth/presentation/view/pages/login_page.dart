@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/controller/login_controller.dart';
+import 'package:ios_macros/src/features/auth/presentation/view/widgets/auth_error.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/goto_signup_button.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/login_button.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/password_textfield.dart';
@@ -21,9 +22,11 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             UsernameTextField(),
-            SizedBox(height: 10),
+            SizedBox(height: 16),
             PasswordTextField(),
-            SizedBox(height: 10),
+            SizedBox(height: 8),
+            AuthError(),
+            SizedBox(height: 8),
             LoginButton(),
             GotoSignupButton(),
           ],

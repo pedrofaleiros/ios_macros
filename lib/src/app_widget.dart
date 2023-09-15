@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/controller/login_controller.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/pages/login_page.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/HB_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_food_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_item_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/details_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
@@ -48,7 +50,6 @@ class AppWidget extends StatelessWidget {
         routes: {
           SplashPage.routeName: (_) => const SplashPage(),
           LoginPage.routeName: (_) => const LoginPage(),
-          // SignupPage.routeName: (_) => const SignupPage(),
           HomePage.routeName: (_) => const HomePage(),
           FoodsPage.routeName: (_) => const FoodsPage(),
           DraggableFoodsPage.routeName: (_) => const DraggableFoodsPage(),
@@ -57,6 +58,8 @@ class AppWidget extends StatelessWidget {
           EditFoodsPage.routeName: (_) => const EditFoodsPage(),
           CreateFoodPage.routeName: (_) => const CreateFoodPage(),
           CreateItemPage.routeName: (_) => const CreateItemPage(),
+          DetailsPage.routeName: (_) => const DetailsPage(),
+          HBPage.routeName: (_) => const HBPage()
         },
       ),
     );

@@ -7,7 +7,7 @@ class GotoSignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: () {
-        // Navigator.pushNamed(context, SignupPage.routeName);
+        // Navigator.pushReplacementNamed(context, SignupPage.routeName);
       },
       child: const Text('Cadastrar'),
     );

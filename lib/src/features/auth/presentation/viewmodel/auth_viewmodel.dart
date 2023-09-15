@@ -16,11 +16,15 @@ abstract class _AuthViewmodelBase with Store {
   @observable
   bool isLoading = false;
 
+  @observable
+  String? authError;
+
   @computed
   bool get isAuth => sessionUser != null;
 
   @action
   Future<void> login(UserDTO user) async {
+    authError = null;
     isLoading = true;
 
     try {
@@ -29,28 +33,37 @@ abstract class _AuthViewmodelBase with Store {
       sessionUser = response;
     } on DioException catch (e) {
       if (e.response != null) {
-        print(e.response);
-      } else {
-        print(e.toString());
+        authError = e.response!.data['error'];
+        if (authError == 'Requisição invalida') {
+          authError = 'Preencha todos os dados';
+        }
       }
-    } catch (e) {
-      print(e.toString());
     } finally {
       isLoading = false;
     }
   }
 
   @action
-  Future<void> signup(UserDTO user) async {
+  Future<bool> signup(UserDTO user) async {
+    authError = null;
     isLoading = true;
 
     try {
       await _usecase.signup(user);
+      isLoading = false;
+      return true;
     } on DioException catch (e) {
-      print(e.response!);
+      if (e.response != null) {
+        authError = e.response!.data['error'];
+        if (authError == 'Requisição invalida') {
+          authError = 'Preencha todos os dados';
+        }
+      }
     } finally {
       isLoading = false;
     }
+
+    return false;
   }
 
   @action
