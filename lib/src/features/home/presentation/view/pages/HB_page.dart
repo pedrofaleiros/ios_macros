@@ -84,7 +84,7 @@ class _HBPageState extends State<HBPage> {
                   color: CupertinoColors.systemGrey6,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                placeholder: 'Idade (Kg)',
+                placeholder: 'Idade',
                 controller: ageCtrl,
               ),
               SizedBox(height: 8),
