@@ -10,6 +10,7 @@ class UsernameTextField extends StatelessWidget {
       padding: EdgeInsets.only(right: 6.0),
       child: Icon(
         CupertinoIcons.person,
+        size: 28,
       ),
     );
   }

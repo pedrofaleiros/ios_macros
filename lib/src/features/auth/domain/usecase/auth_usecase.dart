@@ -27,14 +27,10 @@ class AuthUsecase {
     return responseUser;
   }
 
-  Future<UserModel> signup(UserDTO user) async {
+  Future<void> signup(UserDTO user) async {
     // TODO: validate user
 
-    final responseUser = await repo.signup(user);
-
-    await sharedPreferencesRepo.setToken(responseUser.token);
-
-    return responseUser;
+    await repo.signup(user);
   }
 
   Future<void> logout() async {

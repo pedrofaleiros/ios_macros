@@ -19,6 +19,11 @@ abstract class _AuthViewmodelBase with Store {
   @observable
   String? authError;
 
+  @action
+  void clearError() {
+    authError = null;
+  }
+
   @computed
   bool get isAuth => sessionUser != null;
 

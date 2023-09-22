@@ -3,6 +3,6 @@ import 'package:ios_macros/src/features/auth/domain/model/user_model.dart';
 
 abstract class AuthRepository {
   Future<UserModel> login(UserDTO user);
-  Future<UserModel> signup(UserDTO user);
+  Future<void> signup(UserDTO user);
   Future<UserModel> autoLogin(String token);
 }

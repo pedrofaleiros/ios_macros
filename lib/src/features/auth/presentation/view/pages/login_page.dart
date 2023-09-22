@@ -5,6 +5,7 @@ import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/got
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/login_button.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/password_textfield.dart';
 import 'package:ios_macros/src/features/auth/presentation/view/widgets/login/username_testfield.dart';
+import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -14,6 +15,8 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthViewmodel>().clearError();
+
     context.read<LoginController>().clear();
     return CupertinoPageScaffold(
       child: Container(

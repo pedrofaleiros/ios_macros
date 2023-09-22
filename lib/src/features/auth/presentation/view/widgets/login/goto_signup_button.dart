@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:ios_macros/src/features/auth/presentation/view/pages/signup_page.dart';
 
 class GotoSignupButton extends StatelessWidget {
   const GotoSignupButton({super.key});
@@ -7,7 +8,7 @@ class GotoSignupButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: () {
-        // Navigator.pushReplacementNamed(context, SignupPage.routeName);
+        Navigator.pushNamed(context, SignupPage.routeName);
       },
       child: const Text('Cadastrar'),
     );

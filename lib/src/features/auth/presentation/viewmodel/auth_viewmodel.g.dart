@@ -88,6 +88,20 @@ mixin _$AuthViewmodel on _AuthViewmodelBase, Store {
     return _$autologinAsyncAction.run(() => super.autologin());
   }
 
+  late final _$_AuthViewmodelBaseActionController =
+      ActionController(name: '_AuthViewmodelBase', context: context);
+
+  @override
+  void clearError() {
+    final _$actionInfo = _$_AuthViewmodelBaseActionController.startAction(
+        name: '_AuthViewmodelBase.clearError');
+    try {
+      return super.clearError();
+    } finally {
+      _$_AuthViewmodelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

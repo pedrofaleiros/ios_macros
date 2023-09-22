@@ -26,6 +26,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         onTap: handleTap,
         child: Icon(
           _obscureText ? CupertinoIcons.lock : CupertinoIcons.lock_open,
+          size: 28,
         ),
       ),
     );

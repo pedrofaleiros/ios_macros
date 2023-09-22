@@ -24,11 +24,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserModel> signup(UserDTO user) async {
+  Future<void> signup(UserDTO user) async {
     final dio = DioClient.getDio();
     const url = "${DioClient.baseUrl}/user";
     final data = user.toMap();
     await dio.post(url, data: data);
-    return await login(user);
   }
 }

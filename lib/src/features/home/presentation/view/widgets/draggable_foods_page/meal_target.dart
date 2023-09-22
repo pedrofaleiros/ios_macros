@@ -43,7 +43,7 @@ class _MealTargetState extends State<MealTarget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () {
+      onTap : () {
         final food = context.read<AddItemViewmodel>().food;
         if (food != null) {
           handleAccept(context, food);
