@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 
 import 'package:mobx/mobx.dart';

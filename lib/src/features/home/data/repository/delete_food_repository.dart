@@ -1,4 +1,3 @@
-import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/domain/repository/home_repository_interface.dart';
 import 'package:ios_macros/src/utils/dio_client.dart';
 

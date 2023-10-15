@@ -5,6 +5,7 @@ import 'package:ios_macros/src/features/home/data/repository/create_meal_reposit
 import 'package:ios_macros/src/features/home/data/repository/delete_item_repository.dart';
 import 'package:ios_macros/src/features/home/data/repository/delete_meal_repository.dart';
 import 'package:ios_macros/src/features/home/data/repository/get_meals_repository.dart';
+import 'package:ios_macros/src/features/home/data/repository/update_item_repository.dart';
 import 'package:ios_macros/src/features/home/domain/model/exceptions/invalid_token_exception.dart';
 import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
@@ -74,6 +75,22 @@ class MealUsecase {
     return response;
   }
 
+  Future<ItemModel> updateItem(
+      String? token, String itemId, double amount) async {
+    if (token == null) {
+      throw InvalidTokenException();
+    }
+
+    final repo = UpdateItemRepository();
+
+    final response = await repo.execute(token: token, body: {
+      'item_id': itemId,
+      'amount': amount,
+    });
+
+    return response;
+  }
+
   Future<void> deleteItem(String? token, String itemId) async {
     if (token == null) {
       throw InvalidTokenException();
@@ -89,4 +106,3 @@ class MealUsecase {
     );
   }
 }
-

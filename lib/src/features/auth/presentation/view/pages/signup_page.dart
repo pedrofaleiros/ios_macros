@@ -31,7 +31,7 @@ class SignupPage extends StatelessWidget {
               obscureText: false,
               placeholder: 'Digite seu email',
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SignupTextField(
               icon: CupertinoIcons.person,
               textController: signupController.usernameController,
@@ -41,12 +41,12 @@ class SignupPage extends StatelessWidget {
               obscureText: false,
               placeholder: 'Digite seu username',
             ),
-            SizedBox(height: 16),
-            PasswordTextFieldSignup(),
-            SizedBox(height: 8),
-            AuthError(),
-            SizedBox(height: 8),
-            SignupButton(),
+            const SizedBox(height: 16),
+            const PasswordTextFieldSignup(),
+            const SizedBox(height: 8),
+            const AuthError(),
+            const SizedBox(height: 8),
+            const SignupButton(),
             CupertinoButton(
               onPressed: () {
                 context.read<AuthViewmodel>().clearError();

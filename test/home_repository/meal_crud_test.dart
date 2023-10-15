@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:ios_macros/src/features/home/data/dto/meal_dto.dart';
 import 'package:ios_macros/src/features/home/data/repository/create_item_repository.dart';
 import 'package:ios_macros/src/features/home/data/repository/create_meal_repository.dart';
@@ -64,9 +66,9 @@ void main() {
         token: token,
       );
 
-      list.forEach((element) {
+      for (var element in list) {
         print(element.name);
-      });
+      }
     });
   });
 }

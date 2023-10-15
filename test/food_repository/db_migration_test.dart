@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:ios_macros/src/features/home/data/repository/get_foods_repository.dart';
 import 'package:test/test.dart';
 import 'package:dio/dio.dart';

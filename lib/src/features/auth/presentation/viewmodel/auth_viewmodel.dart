@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:ios_macros/src/features/auth/data/dto/user_dto.dart';
 import 'package:ios_macros/src/features/auth/data/repository/shared_preferences_repository.dart';

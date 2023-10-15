@@ -1,17 +1,11 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
-import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/create_item_page.dart';
-import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/added_text.dart';
-import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/amount_alert_dialog.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_name.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meal_target_time.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/add_item_viewmodel.dart';
-import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
-import 'package:ios_macros/src/utils/last_amount_food.dart';
 import 'package:provider/provider.dart';
 
 class MealTarget extends StatefulWidget {

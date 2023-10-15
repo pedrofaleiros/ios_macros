@@ -1,6 +1,9 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:ios_macros/src/features/home/data/dto/item_dto.dart';
 import 'package:ios_macros/src/features/home/data/dto/meal_dto.dart';
+import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/domain/usecase/meal_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -97,6 +100,31 @@ abstract class _MealViewmodelBase with Store {
 
       meals[index].addItem(response);
       isLoading = false;
+      return true;
+    } on DioException catch (e) {
+      print(e.response!.data);
+    } finally {
+      isLoading = false;
+    }
+    return false;
+  }
+
+  @action
+  Future<bool> updateItem(String? token, ItemModel newItem) async {
+    isLoading = true;
+
+    try {
+      await _usecase.updateItem(token, newItem.id, newItem.amount);
+
+      /* meals.forEach((meal) {
+        meal.items.forEach((item) {
+          if(item.id == response.id){
+            meal.updateItem(response.id, response.amount);
+          }
+        });
+      }); */
+      await getMeals(token);
+
       return true;
     } on DioException catch (e) {
       print(e.response!.data);

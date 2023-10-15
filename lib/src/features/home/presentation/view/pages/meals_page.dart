@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
-import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal_page.dart';
-import 'package:ios_macros/src/features/home/presentation/view/pages/details_page.dart';
-import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meal_widget.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meals_is_empty.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/meals_page_navbar.dart';
@@ -113,15 +110,15 @@ class TotalMacrosWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
+                  const Text(
                     'Total:',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                     ),
                   ),
-                  Text(
+                  const Text(
                     ' ',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       color: CupertinoColors.systemMint,
                       fontWeight: FontWeight.bold,

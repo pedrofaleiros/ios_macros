@@ -1,6 +1,5 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, non_constant_identifier_names, sized_box_for_whitespace, avoid_print
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 
 class HBPage extends StatefulWidget {
@@ -60,7 +59,6 @@ class _HBPageState extends State<HBPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userExercise = levels[2];
   }
@@ -208,7 +206,7 @@ class _HBPageState extends State<HBPage> {
       width: double.infinity,
       child: CupertinoButton.filled(
         onPressed: _calcula,
-        child: Text(
+        child: const Text(
           'Calcular',
           style: TextStyle(
             color: CupertinoColors.white,
@@ -250,7 +248,7 @@ class _HBPageState extends State<HBPage> {
                   Center(
                       child: Text(
                     '${item.text} (${item.obs})',
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   )),
               ],
             ),
@@ -295,7 +293,7 @@ class _HBPageState extends State<HBPage> {
                   userSex = SEX.values[index];
                 });
               },
-              children: [
+              children: const [
                 Center(child: Text('Masculino')),
                 Center(child: Text('Feminino')),
               ],

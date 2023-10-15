@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/domain/model/item_model.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/edit_item_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/widgets/macros_row.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -46,16 +47,21 @@ class ItemListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(item.id),
-      direction: DismissDirection.endToStart,
-      dismissThresholds: const {
-        DismissDirection.endToStart: 0.3,
+    return GestureDetector(
+      onLongPress: () {
+        Navigator.pushNamed(context, EditItemPage.routeName, arguments: item);
       },
-      onDismissed: (_) async => await _deleteItem(context),
-      confirmDismiss: (_) async => await _showDialog(context, item.food.name),
-      background: _background,
-      child: _child,
+      child: Dismissible(
+        key: Key(item.id),
+        direction: DismissDirection.endToStart,
+        dismissThresholds: const {
+          DismissDirection.endToStart: 0.3,
+        },
+        onDismissed: (_) async => await _deleteItem(context),
+        confirmDismiss: (_) async => await _showDialog(context, item.food.name),
+        background: _background,
+        child: _child,
+      ),
     );
   }
 

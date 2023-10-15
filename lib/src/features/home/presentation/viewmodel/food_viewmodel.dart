@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:ios_macros/src/features/home/data/dto/food_dto.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
 import 'package:ios_macros/src/features/home/domain/usecase/food_usecase.dart';
@@ -65,7 +67,7 @@ abstract class _FoodViewmodelBase with Store {
     isLoading = true;
 
     try {
-      final response = await _usecase.create(token, food);
+      await _usecase.create(token, food);
 
       await getFoods(token);
       // foods.add(response);

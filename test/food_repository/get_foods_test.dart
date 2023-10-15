@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:ios_macros/src/features/home/data/repository/get_foods_repository.dart';
 import 'package:test/test.dart';
 
@@ -11,9 +13,9 @@ void main() {
 
       final response = await repo.execute(token: token);
 
-      response.forEach((element) {
+      for (var element in response) {
         print(element.name);
-      });
+      }
     });
   });
 }

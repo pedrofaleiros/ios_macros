@@ -12,7 +12,7 @@ class MealsIsEmpty extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         childCount: 1,
         (context, index) {
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height * 0.7,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

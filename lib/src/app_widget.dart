@@ -11,6 +11,7 @@ import 'package:ios_macros/src/features/home/presentation/view/pages/create_meal
 import 'package:ios_macros/src/features/home/presentation/view/pages/details_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/draggable_foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_page.dart';
+import 'package:ios_macros/src/features/home/presentation/view/pages/edit_item_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/home_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/profile_page.dart';
@@ -66,6 +67,7 @@ class AppWidget extends StatelessWidget {
           CreateItemPage.routeName: (_) => const CreateItemPage(),
           DetailsPage.routeName: (_) => const DetailsPage(),
           HBPage.routeName: (_) => const HBPage(),
+          EditItemPage.routeName: (_) => const EditItemPage()
         },
       ),
     );

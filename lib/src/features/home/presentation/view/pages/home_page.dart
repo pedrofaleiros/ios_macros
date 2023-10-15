@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/foods_page.dart';
@@ -33,7 +32,28 @@ class HomePage extends StatelessWidget {
           );
         }
 
-        return const HomePageContent();
+        return WillPopScope(
+            onWillPop: () async {
+              return await showCupertinoModalPopup(
+                context: context,
+                builder: (_) => CupertinoAlertDialog(
+                  title: const Text('Deseja sair do app?'),
+                  actions: [
+                    CupertinoDialogAction(
+                      onPressed: () => Navigator.pop(context, false),
+                      isDestructiveAction: true,
+                      child: const Text('Não'),
+                    ),
+                    CupertinoDialogAction(
+                      onPressed: () => Navigator.pop(context, true),
+                      isDefaultAction: true,
+                      child: const Text('Sim'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: const HomePageContent());
       },
     );
   }

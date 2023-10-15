@@ -81,6 +81,14 @@ mixin _$MealViewmodel on _MealViewmodelBase, Store {
     return _$createItemAsyncAction.run(() => super.createItem(token, item));
   }
 
+  late final _$updateItemAsyncAction =
+      AsyncAction('_MealViewmodelBase.updateItem', context: context);
+
+  @override
+  Future<bool> updateItem(String? token, ItemModel newItem) {
+    return _$updateItemAsyncAction.run(() => super.updateItem(token, newItem));
+  }
+
   late final _$_MealViewmodelBaseActionController =
       ActionController(name: '_MealViewmodelBase', context: context);
 

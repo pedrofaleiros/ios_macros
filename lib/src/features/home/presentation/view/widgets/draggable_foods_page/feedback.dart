@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/home/domain/model/food_model.dart';
-import 'package:ios_macros/src/features/home/presentation/view/widgets/foods_list_tile.dart';
 
 class FeedBack extends StatelessWidget {
   const FeedBack({

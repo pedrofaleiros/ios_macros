@@ -8,7 +8,6 @@ import 'package:ios_macros/src/features/home/presentation/view/widgets/letter_la
 import 'package:ios_macros/src/features/home/presentation/view/widgets/draggable_foods_page/meals_target_list.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/food_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
-import 'package:ios_macros/src/utils/widgets/loading_page.dart';
 import 'package:provider/provider.dart';
 
 class DraggablePageContent extends StatefulWidget {
@@ -24,10 +23,15 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
   TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
-  Widget _searchFoodTextField(FoodViewmodel foodsController, String token) {
+  final FocusNode searchFocus = FocusNode();
+
+  Widget _searchFoodTextField(
+      FoodViewmodel foodsController, String token, FocusNode focus) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: CupertinoSearchTextField(
+        placeholder: 'Buscar alimentos',
+        focusNode: focus,
         controller: textController,
         onChanged: (value) async => await foodsController.getFoodsWithName(
           token,
@@ -49,7 +53,7 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
 
             return Column(
               children: [
-                _searchFoodTextField(foodsController, token),
+                _searchFoodTextField(foodsController, token, searchFocus),
                 Expanded(
                   child: ListView.builder(
                     itemCount: foodsController.foods.length,
@@ -79,6 +83,20 @@ class _DraggablePageContentState extends State<DraggablePageContent> {
                           child: const Text('Adicionar refeicao'),
                         )
                       : MealsTargetList(scrollController: scrollController),
+                if (!isVisible)
+                  CupertinoButton(
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(CupertinoIcons.search),
+                        SizedBox(width: 8),
+                        Text('Buscar'),
+                      ],
+                    ),
+                    onPressed: () {
+                      FocusScope.of(context).requestFocus(searchFocus);
+                    },
+                  ),
               ],
             );
           },

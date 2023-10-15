@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:ios_macros/src/features/auth/presentation/viewmodel/auth_viewmodel.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/HB_page.dart';
 import 'package:ios_macros/src/features/home/presentation/view/pages/edit_foods_page.dart';

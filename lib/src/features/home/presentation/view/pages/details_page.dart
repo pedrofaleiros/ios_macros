@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ios_macros/src/features/home/domain/model/meal_model.dart';
 import 'package:ios_macros/src/features/home/presentation/viewmodel/meal_viewmodel.dart';
-import 'package:mobx/mobx.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +63,7 @@ class DetailsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           "Calorias: ",
           style: TextStyle(
             color: CupertinoColors.systemMint,
@@ -74,7 +73,7 @@ class DetailsPage extends StatelessWidget {
         ),
         Text(
           "${map['kcal']!.toInt()}",
-          style: TextStyle(
+          style: const TextStyle(
             color: CupertinoColors.systemMint,
             // fontWeight: FontWeight.,
             fontSize: 24,
@@ -88,7 +87,7 @@ class DetailsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           "Gorduras:",
           style: TextStyle(
             color: CupertinoColors.systemOrange,
@@ -98,7 +97,7 @@ class DetailsPage extends StatelessWidget {
         ),
         Text(
           "${map['fat']!.toInt()} g",
-          style: TextStyle(
+          style: const TextStyle(
             color: CupertinoColors.systemOrange,
             fontSize: 20,
           ),
@@ -111,7 +110,7 @@ class DetailsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           "Proteínas: ",
           style: TextStyle(
             color: CupertinoColors.systemBlue,
@@ -121,7 +120,7 @@ class DetailsPage extends StatelessWidget {
         ),
         Text(
           "${map['prot']!.toInt()} g",
-          style: TextStyle(
+          style: const TextStyle(
             color: CupertinoColors.systemBlue,
             fontSize: 20,
           ),
@@ -134,7 +133,7 @@ class DetailsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           "Carboidratos: ",
           style: TextStyle(
             color: CupertinoColors.systemRed,
@@ -144,7 +143,7 @@ class DetailsPage extends StatelessWidget {
         ),
         Text(
           "${map['carb']!.toInt()} g",
-          style: TextStyle(
+          style: const TextStyle(
             color: CupertinoColors.systemRed,
             fontSize: 20,
           ),
@@ -245,7 +244,7 @@ class _PercentListState extends State<PercentList> {
                       color: _getColor(selected % 4),
                     ),
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Stack(
                     children: [
                       Container(
@@ -288,10 +287,9 @@ Color _getColor(int value) {
   }
 }
 
+// ignore: camel_case_types
 class _divider extends StatelessWidget {
-  const _divider({
-    super.key,
-  });
+  const _divider();
 
   @override
   Widget build(BuildContext context) {
